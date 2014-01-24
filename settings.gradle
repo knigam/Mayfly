@@ -1,1 +1,2 @@
 include ':Mayfly'
+include ':libraries:facebook'
