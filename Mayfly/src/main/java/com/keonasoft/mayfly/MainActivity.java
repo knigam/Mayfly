@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
@@ -120,11 +122,10 @@ public class MainActivity extends FragmentActivity {
         private void onSessionStateChange(Session session, SessionState state, Exception exception) {
            if (state.isOpened()) {
                 Log.i(TAG, "Logged in...");
-            }
-            else if (state.isClosed()) {
+           }
+           else if (state.isClosed()) {
                 Log.i(TAG, "Logged out...");
+           }
+        }
     }
-}
-    }
-
 }
