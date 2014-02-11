@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+import com.facebook.android.Facebook;
 import com.facebook.widget.LoginButton;
 import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
 import com.google.android.gms.common.ConnectionResult;
@@ -51,7 +52,7 @@ public class MainActivity extends FragmentActivity {
     String regid;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getApplicationContext();
 
@@ -311,6 +312,10 @@ public class MainActivity extends FragmentActivity {
         private void onSessionStateChange(Session session, SessionState state, Exception exception) {
            if (state.isOpened()) {
                 Log.i(TAG, "Logged in...");
+               Intent intent = new Intent(getActivity(), AppActivity.class);
+               startActivity(intent);
+               finish();
+               //The session is now logged in
            }
            else if (state.isClosed()) {
                 Log.i(TAG, "Logged out...");
