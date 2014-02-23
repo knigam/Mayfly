@@ -129,6 +129,7 @@ public class MainActivity extends FragmentActivity {
         int currentVersion = getAppVersion(context);
         if (registeredVersion != currentVersion) {
             Log.i(TAG, "App version changed.");
+            deleteRegistrationIDFromBackend(registrationId);
             return "";
         }
         return registrationId;
@@ -183,10 +184,6 @@ public class MainActivity extends FragmentActivity {
                     // is using accounts.
                     sendRegistrationIdToBackend();
 
-                    // For this demo: we don't need to send it because the device
-                    // will send upstream messages to a server that echo back the
-                    // message using the 'from' address in the message.
-
                     // Persist the regID - no need to register again.
                     storeRegistrationId(context, regid);
                 } catch (IOException ex) {
@@ -214,6 +211,13 @@ public class MainActivity extends FragmentActivity {
      */
     private void sendRegistrationIdToBackend() {
         // TODO Your implementation here.
+    }
+
+    /**
+     * Removes an outdated registration ID in the case that the app was updated and the key must be replaced
+     */
+    private void deleteRegistrationIDFromBackend(String registrationId){
+        //TODO Your implementation here
     }
 
     /**
