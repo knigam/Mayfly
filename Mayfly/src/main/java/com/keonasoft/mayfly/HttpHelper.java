@@ -8,6 +8,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,6 +20,12 @@ import java.util.Map;
  * Created by kushal on 2/23/14.
  */
 public class HttpHelper {
+
+    /**
+     * Creates a JSON Object based on String key/value mappings
+     * @param map
+     * @return
+     */
     public static JSONObject jsonBuilder(Map<String, String> map){
         JSONObject json = new JSONObject();
         try {
@@ -31,14 +38,21 @@ public class HttpHelper {
         }
         return null;
     }
-    public static HttpResponse httpPost(String uri, JSONObject json){
+
+    /**
+     * sends a JSON Object to a given uri via HTTP POST and converts the response into a JSON
+     * @param uri
+     * @param json
+     * @return
+     */
+    public static JSONObject httpPost(String uri, JSONObject json){
         try {
             DefaultHttpClient httpclient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(uri);
             httpPost.setEntity (new StringEntity(json.toString()));
             httpPost.setHeader("Accept", "application/json");
             httpPost.setHeader("Content-type", "application/json");
-            return httpclient.execute(httpPost);
+            return httpToJson(httpclient.execute(httpPost));
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -56,6 +70,25 @@ public class HttpHelper {
             return httpclient.execute(httpget);
         } catch (IOException e) {
             System.out.println("ERROR");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Attempts to convert an HTTP Response into a string
+     * and then create and return a JSON Object from that string
+     * @param response
+     * @return
+     */
+    public static JSONObject httpToJson(HttpResponse response){
+        try {
+            String json = EntityUtils.toString(response.getEntity());
+            System.out.println(json);
+            return new JSONObject(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         return null;

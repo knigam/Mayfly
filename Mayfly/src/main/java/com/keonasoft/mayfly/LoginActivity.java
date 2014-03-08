@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.view.MenuItem;
@@ -39,6 +41,7 @@ import java.util.Map;
 public class LoginActivity extends Activity {
 
     private String conn;
+    private boolean signIn = true;
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -48,13 +51,17 @@ public class LoginActivity extends Activity {
     // Values for email and password at the time of the login attempt.
     private String mEmail;
     private String mPassword;
+    private String mPasswordConfirmation;
 
     // UI references.
     private EditText mEmailView;
     private EditText mPasswordView;
+    private EditText mPasswordConfirmationView;
     private View mLoginFormView;
     private View mLoginStatusView;
     private TextView mLoginStatusMessageView;
+    private Button submitBtn;
+    private Button toggleBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +75,7 @@ public class LoginActivity extends Activity {
         mEmailView.setText(mEmail);
 
         mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordConfirmationView = (EditText) findViewById(R.id.passwordConfirmation);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -78,15 +86,47 @@ public class LoginActivity extends Activity {
                 return false;
             }
         });
+        mPasswordConfirmationView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                if (id == R.id.create || id == EditorInfo.IME_NULL) {
+                    attemptLogin();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         mLoginFormView = findViewById(R.id.login_form);
         mLoginStatusView = findViewById(R.id.login_status);
         mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
+        submitBtn = (Button) findViewById(R.id.auth_submit_button);
+        toggleBtn = (Button) findViewById(R.id.auth_type_toggle_btn);
 
-        findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
+        submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
+            }
+        });
+        toggleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Change mode to create User
+                if (signIn) {
+                    submitBtn.setText(R.string.action_create_user_short);
+                    toggleBtn.setText(R.string.toggle_have_account);
+                    mPasswordConfirmationView.setVisibility(view.VISIBLE);
+                    mPasswordView.setImeActionLabel("Next", EditorInfo.IME_ACTION_NEXT);
+                    signIn = false;
+                }
+                else{ //change mode to sign in
+                    submitBtn.setText(R.string.action_sign_in_short);
+                    toggleBtn.setText(R.string.toggle_need_account);
+                    mPasswordConfirmationView.setVisibility(view.INVISIBLE);
+                    mPasswordView.setImeActionLabel(getString(R.string.action_sign_in_short), EditorInfo.IME_NULL);
+                    signIn = true;
+                }
             }
         });
     }
@@ -142,19 +182,34 @@ public class LoginActivity extends Activity {
         mEmailView.setError(null);
         mPasswordView.setError(null);
 
+        boolean cancel = false;
+        View focusView = null;
+
         // Store values at the time of the login attempt.
         mEmail = mEmailView.getText().toString();
         mPassword = mPasswordView.getText().toString();
 
-        boolean cancel = false;
-        View focusView = null;
+        // Check for valid Password Confirmation
+        if (!signIn){
+            mPasswordConfirmation = mPasswordConfirmationView.getText().toString(); //store value
+            if (TextUtils.isEmpty(mPasswordConfirmation)) {
+                mPasswordConfirmationView.setError(getString(R.string.error_field_required));
+                focusView = mPasswordConfirmationView;
+                cancel = true;
+            }
+            else if (!mPasswordConfirmation.equals(mPassword)) {
+                mPasswordConfirmationView.setError(getString(R.string.error_incorrect_confirmation));
+                focusView = mPasswordConfirmationView;
+                cancel = true;
+            }
+        }
 
         // Check for a valid password.
         if (TextUtils.isEmpty(mPassword)) {
             mPasswordView.setError(getString(R.string.error_field_required));
             focusView = mPasswordView;
             cancel = true;
-        } else if (mPassword.length() < 4) {
+        } else if (mPassword.length() < 8) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
@@ -230,37 +285,45 @@ public class LoginActivity extends Activity {
      * the user.
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+        JSONObject result;
         @Override
         protected Boolean doInBackground(Void... params) {
-            String uri = conn + "/users/sign_in.json";//sign_in";
-            mEmail = "test@gmail.com";
-            mPassword = "1234qwer";
+            String uri = conn;
             Map<String, String> map = new HashMap<String, String>();
             map.put("email", mEmail);
             map.put("password", mPassword);
+
+            //Determines where to POST to and if confirmation is needed
+            if(signIn){
+                uri += "/users/sign_in.json";
+            }
+            else{
+                map.put("password_confirmation", mPasswordConfirmation);
+                uri += "/users.json";
+            }
+
             JSONObject json = HttpHelper.jsonBuilder(map);
             JSONObject userJson = new JSONObject();
             try {
-                userJson.put("session", json);
+                userJson.put("user", json); //the user tag is necessary for devise
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            HttpHelper.httpPost(uri, userJson);
+            result = HttpHelper.httpPost(uri, userJson);
+            try {
+                String success = result.getString("success");
+                if(success.equals("true")){
+                    User.getInstance().setEmail(result.getString("email"));
+                    return true;
+                }
+                else if (success.equals("false")){
+                    return false;
+                }
 
-//            Map<String, String> map = new HashMap<String, String>();
-//            map.put("email", mEmail);
-//            map.put("password", mPassword);
-//            map.put("password_confirmation", mPassword);
-//            JSONObject json = HttpHelper.jsonBuilder(map);
-//            JSONObject userJson = new JSONObject();
-//            try {
-//                userJson.put("user", json);
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//            HttpResponse response = HttpHelper.httpPost(uri, userJson);
-//            System.out.println(response.getAllHeaders().toString());
-            return true;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return false;
         }
 
         @Override
@@ -269,10 +332,19 @@ public class LoginActivity extends Activity {
             showProgress(false);
 
             if (success) {
+                Intent intent = new Intent(LoginActivity.this, AppActivity.class);
+                startActivity(intent);
                 finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                try {
+                    mPasswordView.setError(result.getString("error"));
+                    if(signIn)
+                        mPasswordView.requestFocus();
+                    else
+                        mEmailView.requestFocus();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
