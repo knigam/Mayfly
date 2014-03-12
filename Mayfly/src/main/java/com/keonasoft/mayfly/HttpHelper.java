@@ -4,6 +4,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -65,6 +66,19 @@ public class HttpHelper {
         }
         return null;
     }
+
+    public static JSONObject httpDelete(String uri){
+        HttpClient httpClient = getHttpClient();
+        HttpDelete httpDelete = new HttpDelete(uri);
+        try{
+            return httpToJson(httpClient.execute(httpDelete));
+        } catch (IOException e){
+            System.out.println("ERROR");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static JSONObject httpGet(String uri){
         HttpClient httpclient = getHttpClient();
         HttpGet httpget = new HttpGet(uri);

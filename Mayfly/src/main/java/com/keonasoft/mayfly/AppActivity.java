@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.facebook.Session;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -79,6 +80,34 @@ public class AppActivity extends Activity
         if(User.getInstance() != null & User.getInstance().getEmail() != null)
             System.out.println(User.getInstance().getEmail());
         System.out.println(regid);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        new AsyncTask<Void, Void, Boolean>(){
+            protected Boolean doInBackground(Void... params) {
+                if (User.getInstance() != null && User.getInstance().getEmail() != null) {
+
+                    JSONObject json = HttpHelper.httpGet(getString(R.string.conn));
+                    try {
+                        if (json.getString("success").equals("true")) {
+                            return true;
+                        }
+                        else if (json.getString("success").equals("false"))
+                            return false;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return false;
+            }
+            protected void onPostExecute(final Boolean success) {
+                if (!success) {
+                    User.getInstance().signOut(context);
+                }
+            }
+        }.execute((Void) null);
     }
     /**
      * Gets the current registration ID for application on GCM service.
@@ -275,16 +304,12 @@ public class AppActivity extends Activity
             }
             //This signs out through devise
             else{
-                final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString(USER_EMAIL, "");
-                editor.commit();
-                User.getInstance().signOut();
-                finish();
-                String uri = getString(R.string.conn) + getString(R.string.sign_out);
-                HttpHelper.httpPost(uri, new JSONObject());
-                Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                startActivity(intent);
+                User.getInstance().signOut(context);
+                if(User.getInstance().getEmail() != null) {
+                    finish();
+                    Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                    startActivity(intent);
+                }
             }
         }
         return super.onOptionsItemSelected(item);

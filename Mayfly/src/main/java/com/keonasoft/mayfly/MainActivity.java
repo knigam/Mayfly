@@ -2,6 +2,7 @@ package com.keonasoft.mayfly;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,6 +30,7 @@ public class MainActivity extends FragmentActivity {
     private MainFragment mainFragment;
     private static final String TAG = "MainActivity";
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private final static String USER_EMAIL = "user_email";
     Context context;
 
 
@@ -61,39 +63,18 @@ public class MainActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         checkPlayServices();
-        CheckUserSessionTask task = new CheckUserSessionTask();
-        task.execute((Void) null);
-    }
 
-    /**
-     * This class checks to see if session cookies are stored. If they are, then it checks to make
-     * sure the session is active by sending an HTTPGet to ~/ if the result is a success, load the
-     * user data into the user instance. Other wise continue prompt to log in
-     */
-    public class CheckUserSessionTask extends AsyncTask<Void, Void, Boolean> {
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            if(User.getInstance() != null && User.getInstance().getEmail() != null){
-
-                JSONObject json = HttpHelper.httpGet(getString(R.string.conn));
-                try {
-                    if(json.getString("success").equals("true")) {
-                        return true;
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+        if (User.getInstance().getEmail() == null){
+            final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+            String mEmail = prefs.getString(USER_EMAIL, "");
+            if (!mEmail.isEmpty()) {
+                User.getInstance().setEmail(mEmail);
             }
-            return false;
         }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            if(success){
-                finish();
-                Intent intent = new Intent(MainActivity.this, AppActivity.class);
-                startActivity(intent);
-            }
+        if (User.getInstance().getEmail() != null){
+            finish();
+            Intent intent = new Intent(MainActivity.this, AppActivity.class);
+            startActivity(intent);
         }
     }
 
