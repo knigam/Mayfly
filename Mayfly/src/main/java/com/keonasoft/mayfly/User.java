@@ -1,5 +1,9 @@
 package com.keonasoft.mayfly;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
+
 /**
  * Created by kushal on 3/5/14.
  */
@@ -16,11 +20,16 @@ public class User {
 
     public String setEmail(String email){
         ourInstance.email = email;
+
         return ourInstance.email;
     }
 
     public String getEmail(){
         return ourInstance.email;
+    }
+
+    public void signOut(){
+        ourInstance.email = null;
     }
 
 }

@@ -2,38 +2,27 @@ package com.keonasoft.mayfly;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
-import android.webkit.WebView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
-import com.facebook.android.Facebook;
 import com.facebook.widget.LoginButton;
-import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import java.io.IOException;
-import java.util.concurrent.atomic.AtomicInteger;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends FragmentActivity {
 
@@ -72,10 +61,39 @@ public class MainActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         checkPlayServices();
-        if(User.getInstance() != null && User.getInstance().getEmail() != null){
-            Intent intent = new Intent(MainActivity.this, AppActivity.class);
-            startActivity(intent);
-            finish();
+        CheckUserSessionTask task = new CheckUserSessionTask();
+        task.execute((Void) null);
+    }
+
+    /**
+     * This class checks to see if session cookies are stored. If they are, then it checks to make
+     * sure the session is active by sending an HTTPGet to ~/ if the result is a success, load the
+     * user data into the user instance. Other wise continue prompt to log in
+     */
+    public class CheckUserSessionTask extends AsyncTask<Void, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            if(User.getInstance() != null && User.getInstance().getEmail() != null){
+
+                JSONObject json = HttpHelper.httpGet(getString(R.string.conn));
+                try {
+                    if(json.getString("success").equals("true")) {
+                        return true;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            if(success){
+                finish();
+                Intent intent = new Intent(MainActivity.this, AppActivity.class);
+                startActivity(intent);
+            }
         }
     }
 
@@ -184,10 +202,9 @@ public class MainActivity extends FragmentActivity {
         private void onSessionStateChange(Session session, SessionState state, Exception exception) {
            if (state.isOpened()) {
                 Log.i(TAG, "Logged in...");
-
+               finish();
                Intent intent = new Intent(getActivity(), AppActivity.class);
                startActivity(intent);
-               finish();
                //The session is now logged in
            }
            else if (state.isClosed()) {
@@ -195,4 +212,5 @@ public class MainActivity extends FragmentActivity {
            }
         }
     }
+
 }

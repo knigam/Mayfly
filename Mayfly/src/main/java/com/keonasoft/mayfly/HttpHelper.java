@@ -2,11 +2,11 @@ package com.keonasoft.mayfly;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
@@ -20,6 +20,8 @@ import java.util.Map;
  * Created by kushal on 2/23/14.
  */
 public class HttpHelper {
+    private static Object mLock = new Object();
+    private static CookieStore mCookie = null;
 
     /**
      * Creates a JSON Object based on String key/value mappings
@@ -47,7 +49,7 @@ public class HttpHelper {
      */
     public static JSONObject httpPost(String uri, JSONObject json){
         try {
-            DefaultHttpClient httpclient = new DefaultHttpClient();
+            HttpClient httpclient = getHttpClient();
             HttpPost httpPost = new HttpPost(uri);
             httpPost.setEntity (new StringEntity(json.toString()));
             httpPost.setHeader("Accept", "application/json");
@@ -63,11 +65,11 @@ public class HttpHelper {
         }
         return null;
     }
-    public static HttpResponse httpGet(String uri){
-        DefaultHttpClient httpclient = new DefaultHttpClient();
+    public static JSONObject httpGet(String uri){
+        HttpClient httpclient = getHttpClient();
         HttpGet httpget = new HttpGet(uri);
         try {
-            return httpclient.execute(httpget);
+            return httpToJson(httpclient.execute(httpget));
         } catch (IOException e) {
             System.out.println("ERROR");
             e.printStackTrace();
@@ -92,5 +94,17 @@ public class HttpHelper {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static HttpClient getHttpClient() {
+        final DefaultHttpClient httpClient = new DefaultHttpClient();
+        synchronized (mLock) {
+            if (mCookie == null) {
+                mCookie = httpClient.getCookieStore();
+            } else {
+                httpClient.setCookieStore(mCookie);
+            }
+        }
+        return httpClient;
     }
 }

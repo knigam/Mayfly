@@ -12,6 +12,10 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_logout">Log out</string>
-    <string name="conn">http://www.mymayfly.com</string>
 
+    <!-- Routes -->
+    <string name="conn">http://www.mymayfly.com</string>
+    <string name="sign_in">/users/sign_in.json</string>
+    <string name="sign_up">/users.json</string>
+    <string name="sign_out">/users/sign_out.json</string>
 </resources>

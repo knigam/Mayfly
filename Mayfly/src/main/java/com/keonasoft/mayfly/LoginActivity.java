@@ -5,32 +5,24 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.view.MenuItem;
-import android.support.v4.app.NavUtils;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +34,7 @@ public class LoginActivity extends Activity {
 
     private String conn;
     private boolean signIn = true;
+    private static final String USER_EMAIL = "user_email";
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -295,11 +288,11 @@ public class LoginActivity extends Activity {
 
             //Determines where to POST to and if confirmation is needed
             if(signIn){
-                uri += "/users/sign_in.json";
+                uri += getString(R.string.sign_in);
             }
             else{
                 map.put("password_confirmation", mPasswordConfirmation);
-                uri += "/users.json";
+                uri += getString(R.string.sign_up);
             }
 
             JSONObject json = HttpHelper.jsonBuilder(map);
@@ -332,9 +325,13 @@ public class LoginActivity extends Activity {
             showProgress(false);
 
             if (success) {
+                final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString(USER_EMAIL, mEmail);
+                editor.commit();
+                finish();
                 Intent intent = new Intent(LoginActivity.this, AppActivity.class);
                 startActivity(intent);
-                finish();
             } else {
                 try {
                     mPasswordView.setError(result.getString("error"));

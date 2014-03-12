@@ -1,8 +1,7 @@
 package com.keonasoft.mayfly;
 
-import android.app.Activity;
-;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -11,24 +10,25 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.facebook.Session;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
+
+;
 
 public class AppActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -50,6 +50,7 @@ public class AppActivity extends Activity
     public static final String EXTRA_MESSAGE = "message";
     public static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
+    private static final String USER_EMAIL = "user_email";
     String SENDER_ID = "230395939091";
     TextView mDisplay;
     AtomicInteger msgId = new AtomicInteger();
@@ -110,10 +111,9 @@ public class AppActivity extends Activity
      * @return Application's {@code SharedPreferences}.
      */
     private SharedPreferences getGCMPreferences(Context context) {
-        //TODO replace this with backend for storing regID
         // This sample app persists the registration ID in shared preferences, but
         // how you store the regID in your app is up to you.
-        return getSharedPreferences(MainActivity.class.getSimpleName(),
+        return getSharedPreferences(AppActivity.class.getSimpleName(),
                 Context.MODE_PRIVATE);
     }
 
@@ -269,15 +269,22 @@ public class AppActivity extends Activity
             Session session = Session.getActiveSession();
             if (!session.isClosed()) {
                 session.closeAndClearTokenInformation();
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
                 finish();
+                Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                startActivity(intent);
             }
+            //This signs out through devise
             else{
-                User.getInstance().setEmail(null);
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
+                final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString(USER_EMAIL, "");
+                editor.commit();
+                User.getInstance().signOut();
                 finish();
+                String uri = getString(R.string.conn) + getString(R.string.sign_out);
+                HttpHelper.httpPost(uri, new JSONObject());
+                Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                startActivity(intent);
             }
         }
         return super.onOptionsItemSelected(item);

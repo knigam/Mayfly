@@ -794,6 +794,7 @@ center
                 type="layout" />
         </source>
         <source path="/home/kushal/Documents/git/Mayfly/libraries/facebook/build/res/rs/debug" />
+        <source path="/home/kushal/Documents/git/Mayfly/libraries/facebook/build/res/generated/debug" />
     </dataSet>
     <dataSet config="debug" >
         <source path="/home/kushal/Documents/git/Mayfly/libraries/facebook/src/debug/res" />
