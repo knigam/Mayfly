@@ -63,18 +63,18 @@ public class MainActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         checkPlayServices();
-
         if (User.getInstance().getEmail() == null){
             final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
             String mEmail = prefs.getString(USER_EMAIL, "");
             if (!mEmail.isEmpty()) {
                 User.getInstance().setEmail(mEmail);
             }
+            System.out.println(User.getInstance().getEmail() + "YAY!!!");
         }
         if (User.getInstance().getEmail() != null){
-            finish();
             Intent intent = new Intent(MainActivity.this, AppActivity.class);
             startActivity(intent);
+            finish();
         }
     }
 
@@ -183,9 +183,9 @@ public class MainActivity extends FragmentActivity {
         private void onSessionStateChange(Session session, SessionState state, Exception exception) {
            if (state.isOpened()) {
                 Log.i(TAG, "Logged in...");
-               finish();
                Intent intent = new Intent(getActivity(), AppActivity.class);
                startActivity(intent);
+               finish();
                //The session is now logged in
            }
            else if (state.isClosed()) {

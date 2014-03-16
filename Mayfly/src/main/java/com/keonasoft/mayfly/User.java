@@ -1,5 +1,6 @@
 package com.keonasoft.mayfly;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,17 +25,18 @@ public class User {
     }
 
     public String setEmail(String email){
-        ourInstance.email = email;
+        this.email = email;
 
         return ourInstance.email;
     }
 
     public String getEmail(){
-        return ourInstance.email;
+        return this.email;
     }
 
-    public void signOut(Context context){
+    public void signOut(Activity activity, Context context){
         final String URI= context.getString(R.string.conn) + context.getString(R.string.sign_out);
+        final Activity ACTIVITY = activity;
 
         new AsyncTask<Void, Void, Boolean>(){
             protected Boolean doInBackground(Void... params) {
@@ -50,11 +52,10 @@ public class User {
             }
             protected void onPostExecute(final Boolean success) {
                 if (success) {
-                    /*final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+                    final SharedPreferences prefs = ACTIVITY.getPreferences(ACTIVITY.MODE_PRIVATE);
                     SharedPreferences.Editor editor = prefs.edit();
-                    editor.putString(USER_EMAIL, "");
+                    editor.putString("user_email", "");
                     editor.commit();
-                    User.getInstance().signOut();*/
                     ourInstance.email = null;
                 } else {
                 }

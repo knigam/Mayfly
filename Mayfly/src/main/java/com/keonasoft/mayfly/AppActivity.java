@@ -77,14 +77,14 @@ public class AppActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-        if(User.getInstance() != null & User.getInstance().getEmail() != null)
-            System.out.println(User.getInstance().getEmail());
         System.out.println(regid);
     }
 
     @Override
     protected void onResume(){
         super.onResume();
+        if(User.getInstance() != null & User.getInstance().getEmail() != null)
+            System.out.println(User.getInstance().getEmail());
         new AsyncTask<Void, Void, Boolean>(){
             protected Boolean doInBackground(Void... params) {
                 if (User.getInstance() != null && User.getInstance().getEmail() != null) {
@@ -100,11 +100,11 @@ public class AppActivity extends Activity
                         e.printStackTrace();
                     }
                 }
-                return false;
+                return true;
             }
             protected void onPostExecute(final Boolean success) {
                 if (!success) {
-                    User.getInstance().signOut(context);
+                    User.getInstance().signOut(AppActivity.this, context);
                 }
             }
         }.execute((Void) null);
@@ -304,11 +304,11 @@ public class AppActivity extends Activity
             }
             //This signs out through devise
             else{
-                User.getInstance().signOut(context);
-                if(User.getInstance().getEmail() != null) {
-                    finish();
+                User.getInstance().signOut(AppActivity.this, context);
+                if(User.getInstance().getEmail() == null) {
                     Intent intent = new Intent(getBaseContext(), MainActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             }
         }

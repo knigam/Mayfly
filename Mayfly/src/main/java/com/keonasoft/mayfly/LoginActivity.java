@@ -329,9 +329,11 @@ public class LoginActivity extends Activity {
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString(USER_EMAIL, mEmail);
                 editor.commit();
-                finish();
                 Intent intent = new Intent(LoginActivity.this, AppActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                finish();
             } else {
                 try {
                     mPasswordView.setError(result.getString("error"));

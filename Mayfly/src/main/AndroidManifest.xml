@@ -57,11 +57,8 @@
         <activity
             android:name="com.keonasoft.mayfly.LoginActivity"
             android:label="@string/title_activity_login"
-            android:parentActivityName="com.keonasoft.mayfly.MainActivity"
             android:windowSoftInputMode="adjustResize|stateVisible" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="MainActivity" />
+
         </activity>
     </application>
 

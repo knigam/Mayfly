@@ -1,8 +1,14 @@
 package com.keonasoft.mayfly;
 
+import android.app.Activity;
+import android.app.Application;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
+
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.PersistentCookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -20,9 +26,10 @@ import java.util.Map;
 /**
  * Created by kushal on 2/23/14.
  */
-public class HttpHelper {
+public class HttpHelper{
     private static Object mLock = new Object();
-    private static CookieStore mCookie = null;
+    private static PersistentCookieStore mCookie = new PersistentCookieStore(;
+    private static final String COOKIE_STORE = "cookie_store";
 
     /**
      * Creates a JSON Object based on String key/value mappings
@@ -120,5 +127,12 @@ public class HttpHelper {
             }
         }
         return httpClient;
+    }
+
+    public static void storeCookies(Activity activity){
+//        final SharedPreferences prefs = activity.getPreferences(activity.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = prefs.edit();
+//        editor.putString(COOKIE_STORE, mCookie);
+//        editor.commit();
     }
 }
