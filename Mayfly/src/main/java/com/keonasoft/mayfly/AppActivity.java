@@ -92,9 +92,11 @@ public class AppActivity extends Activity
                     JSONObject json = HttpHelper.httpGet(getString(R.string.conn));
                     try {
                         if (json.getString("success").equals("true")) {
+                            System.out.println("SUCCESS!!");
                             return true;
                         }
                         else if (json.getString("success").equals("false"))
+                            System.out.println("FAILURE");
                             return false;
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -104,7 +106,7 @@ public class AppActivity extends Activity
             }
             protected void onPostExecute(final Boolean success) {
                 if (!success) {
-                    User.getInstance().signOut(AppActivity.this, context);
+                    User.getInstance().signOut(context);
                 }
             }
         }.execute((Void) null);
@@ -304,7 +306,7 @@ public class AppActivity extends Activity
             }
             //This signs out through devise
             else{
-                User.getInstance().signOut(AppActivity.this, context);
+                User.getInstance().signOut(context);
                 if(User.getInstance().getEmail() == null) {
                     Intent intent = new Intent(getBaseContext(), MainActivity.class);
                     startActivity(intent);

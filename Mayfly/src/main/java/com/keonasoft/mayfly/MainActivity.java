@@ -3,7 +3,6 @@ package com.keonasoft.mayfly;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -19,12 +18,6 @@ import com.facebook.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
-
 public class MainActivity extends FragmentActivity {
 
     private MainFragment mainFragment;
@@ -38,6 +31,7 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getApplicationContext();
+        HttpHelper.ourInstance.initialize(getApplicationContext()); //initialize singalton httphelper object
 
         // Check device for Play Services APK.
         if (checkPlayServices()) {
@@ -63,14 +57,18 @@ public class MainActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         checkPlayServices();
+
+        //Checks to see if user has data stored in RAM
         if (User.getInstance().getEmail() == null){
-            final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+            //If no data, try to get data from shared prefs
+            final SharedPreferences prefs = context.getSharedPreferences(getString(R.string.package_name), MODE_PRIVATE);
             String mEmail = prefs.getString(USER_EMAIL, "");
             if (!mEmail.isEmpty()) {
-                User.getInstance().setEmail(mEmail);
+                User.getInstance().setEmail(mEmail, context);
             }
             System.out.println(User.getInstance().getEmail() + "YAY!!!");
         }
+        //If user now has data in RAM, go on to AppActivity, otherwise continue with MainActivity
         if (User.getInstance().getEmail() != null){
             Intent intent = new Intent(MainActivity.this, AppActivity.class);
             startActivity(intent);
@@ -98,7 +96,10 @@ public class MainActivity extends FragmentActivity {
         return true;
     }
 
-
+    /**
+     * On click listener for the Mayfly login button
+     * @param view
+     */
     public void logInOnClick(View view){
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);

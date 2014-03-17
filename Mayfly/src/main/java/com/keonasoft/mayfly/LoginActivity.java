@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -306,7 +305,7 @@ public class LoginActivity extends Activity {
             try {
                 String success = result.getString("success");
                 if(success.equals("true")){
-                    User.getInstance().setEmail(result.getString("email"));
+                    User.getInstance().setEmail(result.getString("email"), getApplicationContext());
                     return true;
                 }
                 else if (success.equals("false")){
@@ -325,10 +324,6 @@ public class LoginActivity extends Activity {
             showProgress(false);
 
             if (success) {
-                final SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString(USER_EMAIL, mEmail);
-                editor.commit();
                 Intent intent = new Intent(LoginActivity.this, AppActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
