@@ -794,6 +794,7 @@ center
                 type="layout" />
         </source>
         <source path="/home/kushal/Documents/git/Mayfly/libraries/facebook/build/res/rs/release" />
+        <source path="/home/kushal/Documents/git/Mayfly/libraries/facebook/build/res/generated/release" />
     </dataSet>
     <dataSet config="release" >
         <source path="/home/kushal/Documents/git/Mayfly/libraries/facebook/src/release/res" />

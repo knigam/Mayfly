@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="package_name">com.keonasoft.mayfly</string>
     <string name="app_name">Mayfly</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -13,4 +14,11 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_logout">Log out</string>
 
+    <!-- Routes -->
+    <string name="conn">http://www.mymayfly.com</string>
+    <string name="sign_in">/users/sign_in.json</string>
+    <string name="sign_up">/users.json</string>
+    <string name="sign_out">/users/sign_out</string>
+    <string name="devices_create">/devices/create.json</string>
+    <string name="devices_destroy">/devices/destroy.json</string>
 </resources>
