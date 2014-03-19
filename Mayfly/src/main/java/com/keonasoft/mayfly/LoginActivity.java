@@ -306,6 +306,7 @@ public class LoginActivity extends Activity {
                 String success = result.getString("success");
                 if(success.equals("true")){
                     User.getInstance().setEmail(result.getString("email"), getApplicationContext());
+                    User.getInstance().setId(result.getInt("id"), getApplicationContext());
                     return true;
                 }
                 else if (success.equals("false")){
@@ -331,11 +332,8 @@ public class LoginActivity extends Activity {
                 finish();
             } else {
                 try {
-                    mPasswordView.setError(result.getString("error"));
-                    if(signIn)
-                        mPasswordView.requestFocus();
-                    else
-                        mEmailView.requestFocus();
+                    mEmailView.setError(result.getString("error"));
+                    mEmailView.requestFocus();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

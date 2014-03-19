@@ -17,7 +17,9 @@ public class User {
         return ourInstance;
     }
 
-    private String USER_EMAIL = "user_email";
+    private final String USER_EMAIL = "user_email";
+    private final String USER_ID = "user_id";
+    private int id;
     private String email;
     private User() {
     }
@@ -35,6 +37,18 @@ public class User {
     public String getEmail(){
         return this.email;
     }
+
+    public int setId(int id, Context appContext){
+        this.id = id;
+        final SharedPreferences prefs = appContext.getSharedPreferences(appContext.getString(R.string.package_name), appContext.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(USER_ID, id);
+        editor.commit();
+
+        return ourInstance.id;
+    }
+
+    public int getId() { return this.id; }
 
     public void signOut(Context appContext){
         final String URI= appContext.getString(R.string.conn) + appContext.getString(R.string.sign_out);

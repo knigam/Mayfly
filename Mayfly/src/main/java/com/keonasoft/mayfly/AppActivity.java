@@ -27,6 +27,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 ;
@@ -51,6 +53,7 @@ public class AppActivity extends Activity
     public static final String EXTRA_MESSAGE = "message";
     public static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
+    private static final String PROPERTY_USER_ID = "registered_user_id";
     private static final String USER_EMAIL = "user_email";
     String SENDER_ID = "230395939091";
     TextView mDisplay;
@@ -120,7 +123,8 @@ public class AppActivity extends Activity
      */
     private String getRegistrationId(Context context) {
         final SharedPreferences prefs = getGCMPreferences(context);
-        String registrationId = prefs.getString(PROPERTY_REG_ID, "");
+        final String registrationId = prefs.getString(PROPERTY_REG_ID, "");
+        int registeredUser = prefs.getInt(PROPERTY_USER_ID, -1);
         if (registrationId.isEmpty()) {
             Log.i(TAG, "Registration not found.");
             return "";
@@ -134,6 +138,16 @@ public class AppActivity extends Activity
             Log.i(TAG, "App version changed.");
             deleteRegistrationIDFromBackend(registrationId);
             return "";
+        }
+        if(registeredUser != User.getInstance().getId()){
+            //sendRegistrationIdToBackend(registrationId);
+            new AsyncTask<Void, Void, Void>(){
+                @Override
+                protected Void doInBackground(Void... params){
+                    sendRegistrationIdToBackend(registrationId);
+                    return null;
+                }
+            }.execute(null, null, null);
         }
         return registrationId;
     }
@@ -184,7 +198,7 @@ public class AppActivity extends Activity
                     // so it can use GCM/HTTP or CCS to send messages to your app.
                     // The request to your server should be authenticated if your app
                     // is using accounts.
-                    sendRegistrationIdToBackend();
+                    sendRegistrationIdToBackend(regid);
 
                     // Persist the regID - no need to register again.
                     storeRegistrationId(context, regid);
@@ -211,15 +225,73 @@ public class AppActivity extends Activity
      * device sends upstream messages to a server that echoes back the message
      * using the 'from' address in the message.
      */
-    private void sendRegistrationIdToBackend() {
-        // TODO Your implementation here.
+    private void sendRegistrationIdToBackend(String registrationID) {
+        JSONObject result;
+        String uri = getString(R.string.conn) + getString(R.string.devices_create);
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("reg_id", registrationID);
+        map.put("user_id", User.getInstance().getId()+"");
+        map.put("type", "Android");
+
+        JSONObject json = HttpHelper.jsonBuilder(map);
+        JSONObject userJson = new JSONObject();
+        try {
+            userJson.put("device", json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        result = HttpHelper.httpPost(uri, userJson);
+        try {
+            String success = result.getString("success");
+            if(success.equals("true")){
+                storeRegistrationId(context, registrationID);
+                Log.i(TAG, "Registration Successfully sent to backend");
+            }
+            else if (success.equals("false")){
+                Log.i(TAG, "Registration NOT Successfully sent to backend");
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
+
 
     /**
      * Removes an outdated registration ID in the case that the app was updated and the key must be replaced
      */
-    private void deleteRegistrationIDFromBackend(String registrationId){
-        //TODO Your implementation here
+    private void deleteRegistrationIDFromBackend(final String registrationID){
+        new AsyncTask<Void, Void, Boolean>(){
+            @Override
+            protected Boolean doInBackground(Void... params){
+                String uri = getString(R.string.conn) + getString(R.string.devices_destroy);
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("reg_id", registrationID);
+
+                JSONObject json = HttpHelper.jsonBuilder(map);
+                JSONObject userJson = new JSONObject();
+                try {
+                    userJson.put("device", json);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                JSONObject result = HttpHelper.httpPost(uri, userJson);
+                try {
+                    String success = result.getString("success");
+                    if(success.equals("true")){
+                        Log.i(TAG, "Registration Successfully deleted from backend");
+                        return true;
+                    }
+                    else if (success.equals("false")){
+                        Log.i(TAG, "Registration NOT Successfully deleted from backend");
+                        return false;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
+        }.execute(null, null, null);
     }
 
     /**
@@ -236,6 +308,7 @@ public class AppActivity extends Activity
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PROPERTY_REG_ID, regId);
         editor.putInt(PROPERTY_APP_VERSION, appVersion);
+        editor.putInt(PROPERTY_USER_ID, User.getInstance().getId());
         editor.commit();
     }
 
@@ -306,6 +379,7 @@ public class AppActivity extends Activity
             }
             //This signs out through devise
             else{
+                deleteRegistrationIDFromBackend(regid);
                 User.getInstance().signOut(context);
                 if(User.getInstance().getEmail() == null) {
                     Intent intent = new Intent(getBaseContext(), MainActivity.class);

@@ -19,4 +19,6 @@
     <string name="sign_in">/users/sign_in.json</string>
     <string name="sign_up">/users.json</string>
     <string name="sign_out">/users/sign_out</string>
+    <string name="devices_create">/devices/create.json</string>
+    <string name="devices_destroy">/devices/destroy.json</string>
 </resources>
