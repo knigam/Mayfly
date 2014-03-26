@@ -184,10 +184,10 @@ public class MainActivity extends FragmentActivity {
         private void onSessionStateChange(Session session, SessionState state, Exception exception) {
            if (state.isOpened()) {
                 Log.i(TAG, "Logged in...");
-               Intent intent = new Intent(getActivity(), AppActivity.class);
-               startActivity(intent);
-               finish();
-               //The session is now logged in
+//               Intent intent = new Intent(getActivity(), AppActivity.class);
+//               startActivity(intent);
+//               finish();
+//               //The session is now logged in
            }
            else if (state.isClosed()) {
                 Log.i(TAG, "Logged out...");

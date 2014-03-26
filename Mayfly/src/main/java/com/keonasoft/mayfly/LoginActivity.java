@@ -181,6 +181,12 @@ public class LoginActivity extends Activity {
         mEmail = mEmailView.getText().toString();
         mPassword = mPasswordView.getText().toString();
 
+        //*****************************
+        //THIS IS FOR DEBUGGING ONLY!!!
+        mEmail = "test@gmail.com";
+        mPassword = "12345678";
+        //*****************************
+
         // Check for valid Password Confirmation
         if (!signIn){
             mPasswordConfirmation = mPasswordConfirmationView.getText().toString(); //store value

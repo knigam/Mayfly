@@ -82,38 +82,37 @@ public class AppActivity extends Activity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
         System.out.println(regid);
     }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-        if(User.getInstance() != null & User.getInstance().getEmail() != null)
-            System.out.println(User.getInstance().getEmail());
-        new AsyncTask<Void, Void, Boolean>(){
-            protected Boolean doInBackground(Void... params) {
-                if (User.getInstance() != null && User.getInstance().getEmail() != null) {
-
-                    JSONObject json = HttpHelper.httpGet(getString(R.string.conn));
-                    try {
-                        if (json.getString("success").equals("true")) {
-                            System.out.println("SUCCESS!!");
-                            return true;
-                        }
-                        else if (json.getString("success").equals("false"))
-                            System.out.println("FAILURE");
-                            return false;
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                return true;
-            }
-            protected void onPostExecute(final Boolean success) {
-                if (!success) {
-                    User.getInstance().signOut(context);
-                }
-            }
-        }.execute((Void) null);
-    }
+//
+//    @Override
+//    protected void onResume(){
+//        super.onResume();
+//
+//        new AsyncTask<Void, Void, Boolean>(){
+//            protected Boolean doInBackground(Void... params) {
+//                if (User.getInstance() != null && User.getInstance().getEmail() != null) {
+//
+//                    JSONObject json = HttpHelper.httpGet(getString(R.string.conn));
+//                    try {
+//                        if (json.getString("success").equals("true")) {
+//                            System.out.println("SUCCESS!!");
+//                            return true;
+//                        }
+//                        else if (json.getString("success").equals("false"))
+//                            System.out.println("FAILURE");
+//                            return false;
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                return true;
+//            }
+//            protected void onPostExecute(final Boolean success) {
+//                if (!success) {
+//                    User.getInstance().signOut(context);
+//                }
+//            }
+//        }.execute((Void) null);
+//    }
     /**
      * Gets the current registration ID for application on GCM service.
      * If result is empty, the app needs to register.
@@ -124,7 +123,6 @@ public class AppActivity extends Activity
     private String getRegistrationId(Context context) {
         final SharedPreferences prefs = getGCMPreferences(context);
         final String registrationId = prefs.getString(PROPERTY_REG_ID, "");
-        int registeredUser = prefs.getInt(PROPERTY_USER_ID, -1);
         if (registrationId.isEmpty()) {
             Log.i(TAG, "Registration not found.");
             return "";
@@ -139,16 +137,19 @@ public class AppActivity extends Activity
             deleteRegistrationIDFromBackend(registrationId);
             return "";
         }
-        if(registeredUser != User.getInstance().getId()){
-            //sendRegistrationIdToBackend(registrationId);
-            new AsyncTask<Void, Void, Void>(){
-                @Override
-                protected Void doInBackground(Void... params){
-                    sendRegistrationIdToBackend(registrationId);
-                    return null;
+        new AsyncTask<Void, Void, Boolean>(){
+            @Override
+            protected Boolean doInBackground(Void... params){
+                boolean success = sendRegistrationIdToBackend(registrationId);
+                return success;
+            }
+            protected void onPostExecute(final Boolean success) {
+                if (!success) {
+                    User.getInstance().signOut(AppActivity.this.context);
+                    finish();
                 }
-            }.execute(null, null, null);
-        }
+            }
+        }.execute(null, null, null);
         return registrationId;
     }
 
@@ -225,7 +226,7 @@ public class AppActivity extends Activity
      * device sends upstream messages to a server that echoes back the message
      * using the 'from' address in the message.
      */
-    private void sendRegistrationIdToBackend(String registrationID) {
+    private boolean sendRegistrationIdToBackend(String registrationID) {
         JSONObject result;
         String uri = getString(R.string.conn) + getString(R.string.devices_create);
         Map<String, String> map = new HashMap<String, String>();
@@ -244,16 +245,18 @@ public class AppActivity extends Activity
         try {
             String success = result.getString("success");
             if(success.equals("true")){
-                storeRegistrationId(context, registrationID);
                 Log.i(TAG, "Registration Successfully sent to backend");
+                return true;
             }
             else if (success.equals("false")){
                 Log.i(TAG, "Registration NOT Successfully sent to backend");
+                return false;
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
 
@@ -308,7 +311,6 @@ public class AppActivity extends Activity
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PROPERTY_REG_ID, regId);
         editor.putInt(PROPERTY_APP_VERSION, appVersion);
-        editor.putInt(PROPERTY_USER_ID, User.getInstance().getId());
         editor.commit();
     }
 
