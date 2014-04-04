@@ -331,10 +331,10 @@ public class LoginActivity extends Activity {
             showProgress(false);
 
             if (success) {
-                Intent intent = new Intent(LoginActivity.this, AppActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+//                Intent intent = new Intent(LoginActivity.this, AppActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(intent);
                 finish();
             } else {
                 try {

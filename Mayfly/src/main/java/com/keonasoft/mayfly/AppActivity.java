@@ -231,7 +231,6 @@ public class AppActivity extends Activity
         String uri = getString(R.string.conn) + getString(R.string.devices_create);
         Map<String, String> map = new HashMap<String, String>();
         map.put("reg_id", registrationID);
-        map.put("user_id", User.getInstance().getId()+"");
         map.put("type", "Android");
 
         JSONObject json = HttpHelper.jsonBuilder(map);
@@ -373,22 +372,22 @@ public class AppActivity extends Activity
         }
         if (id == R.id.action_logout){
             Session session = Session.getActiveSession();
-            if (!session.isClosed()) {
-                session.closeAndClearTokenInformation();
-                finish();
+//            if (!session.isClosed()) {
+//                session.closeAndClearTokenInformation();
+//                finish();
+//                Intent intent = new Intent(getBaseContext(), MainActivity.class);
+//                startActivity(intent);
+//            }
+//            //This signs out through devise
+//            else{
+            deleteRegistrationIDFromBackend(regid);
+            User.getInstance().signOut(context);
+            if(User.getInstance().getEmail() == null) {
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                 startActivity(intent);
+                finish();
             }
-            //This signs out through devise
-            else{
-                deleteRegistrationIDFromBackend(regid);
-                User.getInstance().signOut(context);
-                if(User.getInstance().getEmail() == null) {
-                    Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            }
+//            }
         }
         return super.onOptionsItemSelected(item);
     }
