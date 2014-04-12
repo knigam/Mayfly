@@ -317,9 +317,29 @@ public class AppActivity extends Activity
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
+        switch (position) {
+            case 0:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, NotificationsFragment.newInstance(position + 1))
+                        .commit();
+                break;
+            case 1:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, MyEventsFragment.newInstance(position + 1))
+                        .commit();
+                break;
+            case 2:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, AttendingEventsFragment.newInstance(position + 1))
+                        .commit();
+                break;
+            case 3:
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, FriendsFragment.newInstance(position + 1))
+                        .commit();
+                break;
+        }
+
     }
 
     public void onSectionAttached(int number) {
@@ -332,6 +352,9 @@ public class AppActivity extends Activity
                 break;
             case 3:
                 mTitle = getString(R.string.title_section3);
+                break;
+            case 4:
+                mTitle = getString(R.string.title_section4);
                 break;
         }
     }

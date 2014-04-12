@@ -290,6 +290,7 @@ public class LoginActivity extends Activity {
             Map<String, String> map = new HashMap<String, String>();
             map.put("email", mEmail);
             map.put("password", mPassword);
+            map.put("remember", "true");
 
             //Determines where to POST to and if confirmation is needed
             if(signIn){
