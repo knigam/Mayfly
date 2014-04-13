@@ -1,9 +1,11 @@
-package com.keonasoft.mayfly;
+package com.keonasoft.mayfly.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.keonasoft.mayfly.R;
 
 public class EventActivity extends Activity {
 

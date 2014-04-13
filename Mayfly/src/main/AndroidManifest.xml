@@ -31,7 +31,7 @@
         <service android:name="com.keonasoft.mayfly.GcmIntentService" />
 
         <activity
-            android:name="com.keonasoft.mayfly.MainActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,11 +41,11 @@
         </activity>
         <activity android:name="com.facebook.LoginActivity" />
         <activity
-            android:name="com.keonasoft.mayfly.AppActivity"
+            android:name=".activity.AppActivity"
             android:label="@string/title_activity_app" >
         </activity>
         <activity
-            android:name="com.keonasoft.mayfly.EventActivity"
+            android:name=".activity.EventActivity"
             android:label="@string/app_name" >
         </activity>
         <!--<activity-->
@@ -63,7 +63,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name="com.keonasoft.mayfly.LoginActivity"
+            android:name=".activity.LoginActivity"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize|stateVisible" >
 

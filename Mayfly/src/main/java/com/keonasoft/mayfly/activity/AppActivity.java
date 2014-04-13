@@ -1,4 +1,4 @@
-package com.keonasoft.mayfly;
+package com.keonasoft.mayfly.activity;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -22,6 +22,14 @@ import android.widget.TextView;
 
 import com.facebook.Session;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.keonasoft.mayfly.fragment.AttendingEventsFragment;
+import com.keonasoft.mayfly.fragment.FriendsFragment;
+import com.keonasoft.mayfly.HttpHelper;
+import com.keonasoft.mayfly.fragment.MyEventsFragment;
+import com.keonasoft.mayfly.fragment.NavigationDrawerFragment;
+import com.keonasoft.mayfly.fragment.NotificationsFragment;
+import com.keonasoft.mayfly.R;
+import com.keonasoft.mayfly.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;

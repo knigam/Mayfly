@@ -11,6 +11,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.keonasoft.mayfly.activity.MainActivity;
 
 /**
  * Created by kushal on 2/11/14.

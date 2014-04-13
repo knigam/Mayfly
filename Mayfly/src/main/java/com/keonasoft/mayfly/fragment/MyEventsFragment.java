@@ -1,15 +1,16 @@
-package com.keonasoft.mayfly;
+package com.keonasoft.mayfly.fragment;
 
 
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
+
+import com.keonasoft.mayfly.activity.AppActivity;
+import com.keonasoft.mayfly.R;
 
 /**
  * A fragment for "My Events" page.
