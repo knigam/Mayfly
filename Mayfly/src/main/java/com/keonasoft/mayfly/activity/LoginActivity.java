@@ -18,9 +18,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.keonasoft.mayfly.HttpHelper;
+import com.keonasoft.mayfly.helper.HttpHelper;
 import com.keonasoft.mayfly.R;
-import com.keonasoft.mayfly.User;
+import com.keonasoft.mayfly.model.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;

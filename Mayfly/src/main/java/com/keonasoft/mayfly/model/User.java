@@ -1,8 +1,11 @@
-package com.keonasoft.mayfly;
+package com.keonasoft.mayfly.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+
+import com.keonasoft.mayfly.R;
+import com.keonasoft.mayfly.helper.HttpHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;

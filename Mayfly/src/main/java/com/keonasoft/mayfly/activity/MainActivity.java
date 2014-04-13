@@ -17,9 +17,9 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.widget.LoginButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.keonasoft.mayfly.HttpHelper;
+import com.keonasoft.mayfly.helper.HttpHelper;
 import com.keonasoft.mayfly.R;
-import com.keonasoft.mayfly.User;
+import com.keonasoft.mayfly.model.User;
 
 public class MainActivity extends FragmentActivity {
 

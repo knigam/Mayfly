@@ -1,4 +1,4 @@
-package com.keonasoft.mayfly;
+package com.keonasoft.mayfly.helper;
 
 import android.content.Context;
 
