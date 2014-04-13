@@ -4,6 +4,10 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import org.json.JSONObject;
+
+import java.sql.SQLClientInfoException;
+
 /**
  * Created by kushal on 4/12/14.
  */
@@ -49,6 +53,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         db.execSQL(CREATE_FRIEND_TABLE);
         db.execSQL(CREATE_EVENT_TABLE);
         db.execSQL(CREATE_ATTENDING_USER_TABLE);
+
+        JSONObject friendships = HttpHelper.httpGet("www.mymayfly.com/friendships");
     }
 
     @Override
@@ -60,5 +66,16 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
 
         // re-create tables for db
         this.onCreate(db);
+    }
+
+
+    /**
+     * Drops the current SQLite database
+     * this should be called when a user logs out
+     * @param context
+     */
+    public void dropSQLiteDatabase(Context context){
+        this.close();
+        context.deleteDatabase(DATABASE_NAME);
     }
 }

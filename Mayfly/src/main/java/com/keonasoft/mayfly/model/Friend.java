@@ -5,8 +5,7 @@ package com.keonasoft.mayfly.model;
  */
 public class Friend {
 
-    private int friendshipId;
-    private int userId;
+    private int friendId;
     private int groupId;
     private String friendName;
     private String userName;
@@ -14,30 +13,21 @@ public class Friend {
 
     public Friend(){};
 
-    public Friend(int friendshipId, int userId, int groupId, String friendName, String userName, String groupName){
+    public Friend(int friendId, int groupId, String friendName, String userName, String groupName){
         super();
-        this.friendshipId = friendshipId;
-        this. userId = userId;
+        this. friendId = friendId;
         this.groupId = groupId;
         this.friendName = friendName;
         this.userName = userName;
         this.groupName = groupName;
     }
 
-    public int getFriendshipId() {
-        return friendshipId;
+    public int getFriendId() {
+        return friendId;
     }
 
-    public void setFriendshipId(int friendshipId) {
-        this.friendshipId = friendshipId;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setFriendId(int friendId) {
+        this.friendId = friendId;
     }
 
     public int getGroupId() {
@@ -75,8 +65,7 @@ public class Friend {
     @Override
     public String toString() {
         return "Friend{" +
-                "friendshipId=" + friendshipId +
-                ", userId=" + userId +
+                ", friendId=" + friendId +
                 ", groupId=" + groupId +
                 ", friendName='" + friendName + '\'' +
                 ", userName='" + userName + '\'' +

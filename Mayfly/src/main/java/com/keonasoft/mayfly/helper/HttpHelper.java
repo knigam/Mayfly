@@ -26,12 +26,9 @@ public class HttpHelper {
 
     public static HttpHelper ourInstance = new HttpHelper();
 
-    private static Object mLock = new Object();
-    private static Context context;
     private static PersistentCookieStore mCookie;
     private static DefaultHttpClient mHttpClient;
     private static boolean initialized = false;
-    private static final String COOKIE_STORE = "cookie_store";
 
     /**
      * This method sets up ourInstance for use. Initialize must be run at least once before any other
@@ -39,7 +36,6 @@ public class HttpHelper {
      * @param context
      */
     public void initialize(Context context) {
-        this.context = context;
         this.mCookie = new PersistentCookieStore(context);
         this.mHttpClient = new DefaultHttpClient();
         this.mHttpClient.setCookieStore(mCookie);
@@ -155,17 +151,4 @@ public class HttpHelper {
         }
         return null;
     }
-
-
-//    private static HttpClient getHttpClient() {
-//        final DefaultHttpClient httpClient = new DefaultHttpClient();
-//        synchronized (mLock) {
-//            if (mCookie == null) {
-//                mCookie = httpClient.getCookieStore();
-//            } else {
-//                httpClient.setCookieStore(mCookie);
-//            }
-//        }
-//        return httpClient;
-//    }
 }
