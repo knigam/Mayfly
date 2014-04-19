@@ -281,6 +281,10 @@ public class LoginActivity extends Activity {
         }
     }
 
+    private void getUserData(){
+
+    }
+
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -317,6 +321,7 @@ public class LoginActivity extends Activity {
                 if(success.equals("true")){
                     User.getInstance().setEmail(result.getString("email"), getApplicationContext());
                     User.getInstance().setId(result.getInt("id"), getApplicationContext());
+                    getUserData();
                     return true;
                 }
                 else if (success.equals("false")){
@@ -335,10 +340,6 @@ public class LoginActivity extends Activity {
             showProgress(false);
 
             if (success) {
-//                Intent intent = new Intent(LoginActivity.this, AppActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(intent);
                 finish();
             } else {
                 try {

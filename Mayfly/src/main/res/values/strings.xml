@@ -21,6 +21,8 @@
     <string name="sign_out">/users/sign_out</string>
     <string name="devices_create">/devices/create.json</string>
     <string name="devices_destroy">/devices/destroy.json</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="friends">/friends.json</string>
 
+    <!-- Cache Files -->
+    <string name="friends_cache">mayfly_friends_cache</string>
 </resources>

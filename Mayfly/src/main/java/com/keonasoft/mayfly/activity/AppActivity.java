@@ -153,8 +153,7 @@ public class AppActivity extends Activity
             }
             protected void onPostExecute(final Boolean success) {
                 if (!success) {
-                    User.getInstance().signOut(AppActivity.this.context);
-                    finish();
+                    signUserOut();
                 }
             }
         }.execute(null, null, null);
@@ -412,15 +411,38 @@ public class AppActivity extends Activity
 //            //This signs out through devise
 //            else{
             deleteRegistrationIDFromBackend(regid);
-            User.getInstance().signOut(context);
-            if(User.getInstance().getEmail() == null) {
-                Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
+            signUserOut();
 //            }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * This method calls the User's sign out method and clears user data if the user is successfully
+     * signed out from the backend. The app then switches to the main activity.
+     */
+    private void signUserOut(){
+        final String URI= getString(R.string.conn) + getString(R.string.sign_out);
+
+        new AsyncTask<Void, Void, Boolean>(){
+            protected Boolean doInBackground(Void... params) {
+                return User.getInstance().signOut(URI);
+            }
+            protected void onPostExecute(final Boolean success) {
+                if (success) {
+                    final SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.package_name), context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString(USER_EMAIL, "");
+                    editor.commit();
+                    User.getInstance().setEmail(null, context);
+
+                    //Exiting activity and switching to main activity
+                    Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        }.execute((Void) null);
     }
 
     /**

@@ -68,6 +68,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         this.onCreate(db);
     }
 
+    public void updateFriends(){
+        String uri = "www.mymayfly.com/frienships";
+        JSONObject result = HttpHelper.httpGet(uri);
+
+    }
 
     /**
      * Drops the current SQLite database
