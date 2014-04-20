@@ -90,37 +90,7 @@ public class AppActivity extends Activity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
         System.out.println(regid);
     }
-//
-//    @Override
-//    protected void onResume(){
-//        super.onResume();
-//
-//        new AsyncTask<Void, Void, Boolean>(){
-//            protected Boolean doInBackground(Void... params) {
-//                if (User.getInstance() != null && User.getInstance().getEmail() != null) {
-//
-//                    JSONObject json = HttpHelper.httpGet(getString(R.string.conn));
-//                    try {
-//                        if (json.getString("success").equals("true")) {
-//                            System.out.println("SUCCESS!!");
-//                            return true;
-//                        }
-//                        else if (json.getString("success").equals("false"))
-//                            System.out.println("FAILURE");
-//                            return false;
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//                return true;
-//            }
-//            protected void onPostExecute(final Boolean success) {
-//                if (!success) {
-//                    User.getInstance().signOut(context);
-//                }
-//            }
-//        }.execute((Void) null);
-//    }
+
     /**
      * Gets the current registration ID for application on GCM service.
      * If result is empty, the app needs to register.

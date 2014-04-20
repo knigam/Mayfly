@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.keonasoft.mayfly.MyException;
 import com.keonasoft.mayfly.R;
 import com.keonasoft.mayfly.activity.AppActivity;
 import com.keonasoft.mayfly.helper.HttpHelper;
@@ -12,9 +13,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -89,18 +96,22 @@ public class User {
         String URI = appContext.getString(R.string.conn) + appContext.getString(R.string.friends);
         JSONObject result = HttpHelper.httpGet(URI);
         final String FILENAME = appContext.getString(R.string.friends_cache);
+        File file = new File(appContext.getCacheDir(), FILENAME);
 
+        JSONArray friends = null;
         try {
-            JSONArray friends = result.getJSONArray("friends");
-            FileOutputStream fos = appContext.openFileOutput(FILENAME, Context.MODE_PRIVATE);
-            fos.write(friends.toString().getBytes());
-            fos.close();
+            friends = result.getJSONArray("friends");
         } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            throw new MyException(appContext, e);
+        }
+
+        BufferedWriter buf = null;
+        try {
+            buf = new BufferedWriter(new FileWriter(file));
+            buf.write(friends.toString());
+            buf.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new MyException(appContext, e);
         }
     }
 
@@ -109,32 +120,53 @@ public class User {
      * and returns a map between friend's ids and names.
      * @return
      */
-    public Map<Integer, String> getFriends(Context appContext){
+    public Map<String, Integer> getFriends(Context appContext){
         final String FILENAME = appContext.getString(R.string.friends_cache);
+        File file = new File(appContext.getCacheDir(), FILENAME);
+        String friends = new String();
+        JSONArray friendsJson = new JSONArray();
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        BufferedReader buf = null;
 
-        Map<Integer, String> map = new HashMap<Integer, String>();
         try {
-            FileInputStream fis = appContext.openFileInput(FILENAME);
-            StringBuilder friendsJson = new StringBuilder();
-            int ch;
-            while((ch = fis.read()) != -1){
-                friendsJson.append((char)ch);
-            }
-
-            JSONArray friends = new JSONArray(friendsJson.toString());
-            for(int i = 0; i < friends.length(); i++){
-                JSONObject friend = friends.getJSONObject(i);
-                int friendId = friend.getInt("friend_id");
-                String friendName = friend.getString("friend_name");
-                map.put(friendId, friendName);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+            buf = new BufferedReader(new FileReader(file));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            cacheFriends(appContext);
+            return getFriends(appContext);
         }
+
+        try {
+            friends = buf.readLine();
+            buf.close();
+        } catch (IOException e) {
+            throw new MyException(appContext, e);
+        }
+
+        try {
+            friendsJson = new JSONArray(friends.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            cacheFriends(appContext);
+            return getFriends(appContext);
+        }
+
+        for(int i = 0; i < friendsJson.length(); i++){
+
+            String friendName = null;
+            int friendId = 0;
+            try {
+                JSONObject friend = friendsJson.getJSONObject(i);
+                friendId = friend.getInt("id");
+                friendName = friend.getString("name");
+            } catch (JSONException e) {
+                e.printStackTrace();
+                cacheFriends(appContext);
+                return getFriends(appContext);
+            }
+            map.put(friendName, friendId);
+        }
+
         return map;
     }
 }

@@ -186,8 +186,8 @@ public class LoginActivity extends Activity {
 
         //*****************************
         //THIS IS FOR DEBUGGING ONLY!!!
-        mEmail = "test@gmail.com";
-        mPassword = "12345678";
+        mEmail = "kushal.nigam1@gmail.com";
+        mPassword = "1234qwer";
         //*****************************
 
         // Check for valid Password Confirmation
