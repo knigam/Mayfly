@@ -93,19 +93,19 @@ public class User {
      * @param appContext
      */
     public void cacheFriends(Context appContext){
-        String URI = appContext.getString(R.string.conn) + appContext.getString(R.string.friends);
+        String URI = appContext.getString(R.string.conn) + appContext.getString(R.string.friends_show);
         JSONObject result = HttpHelper.httpGet(URI);
         final String FILENAME = appContext.getString(R.string.friends_cache);
         File file = new File(appContext.getCacheDir(), FILENAME);
 
-        JSONArray friends = null;
+        JSONArray friends;
         try {
             friends = result.getJSONArray("friends");
         } catch (JSONException e) {
             throw new MyException(appContext, e);
         }
 
-        BufferedWriter buf = null;
+        BufferedWriter buf;
         try {
             buf = new BufferedWriter(new FileWriter(file));
             buf.write(friends.toString());
@@ -123,10 +123,10 @@ public class User {
     public Map<String, Integer> getFriends(Context appContext){
         final String FILENAME = appContext.getString(R.string.friends_cache);
         File file = new File(appContext.getCacheDir(), FILENAME);
-        String friends = new String();
-        JSONArray friendsJson = new JSONArray();
+        String friends;
+        JSONArray friendsJson;
         Map<String, Integer> map = new HashMap<String, Integer>();
-        BufferedReader buf = null;
+        BufferedReader buf;
 
         try {
             buf = new BufferedReader(new FileReader(file));
@@ -153,8 +153,8 @@ public class User {
 
         for(int i = 0; i < friendsJson.length(); i++){
 
-            String friendName = null;
-            int friendId = 0;
+            String friendName;
+            int friendId;
             try {
                 JSONObject friend = friendsJson.getJSONObject(i);
                 friendId = friend.getInt("id");
@@ -165,6 +165,99 @@ public class User {
                 return getFriends(appContext);
             }
             map.put(friendName, friendId);
+        }
+
+        return map;
+    }
+
+    /**
+     * receives a json containing an array of all the events the user is invited to
+     * and saves a string representing that array to a cache file
+     * @param appContext
+     */
+    public void cacheEvents(Context appContext){
+        String URI = appContext.getString(R.string.conn) + appContext.getString(R.string.events_show);
+        JSONObject result = HttpHelper.httpGet(URI);
+        final String FILENAME = appContext.getString(R.string.events_cache);
+        File file = new File(appContext.getCacheDir(), FILENAME);
+
+        JSONArray events;
+        try {
+            events = result.getJSONArray("events");
+        } catch (JSONException e) {
+            throw new MyException(appContext, e);
+        }
+
+        BufferedWriter buf;
+        try {
+            buf = new BufferedWriter(new FileWriter(file));
+            buf.write(events.toString());
+            buf.close();
+        } catch (IOException e) {
+            throw new MyException(appContext, e);
+        }
+    }
+
+    /**
+     * Takes the cached, stringified json representing the user's events
+     * and returns a map between event ids and names.
+     * @return
+     */
+    public Map<String, Integer> getEvents(Context appContext, boolean attending, boolean creator){
+        final String FILENAME = appContext.getString(R.string.events_cache);
+        File file = new File(appContext.getCacheDir(), FILENAME);
+        String friends = new String();
+        JSONArray eventsJson;
+        Map<String, Integer> map = new HashMap<String, Integer>();
+        BufferedReader buf;
+
+        try {
+            buf = new BufferedReader(new FileReader(file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            cacheEvents(appContext);
+            return getEvents(appContext, attending, creator);
+        }
+
+        try {
+            friends = buf.readLine();
+            buf.close();
+        } catch (IOException e) {
+            throw new MyException(appContext, e);
+        }
+
+        try {
+            eventsJson = new JSONArray(friends.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            cacheEvents(appContext);
+            return getEvents(appContext, attending, creator);
+        }
+
+        for(int i = 0; i < eventsJson.length(); i++){
+
+            String eventName;
+            int eventId;
+            boolean add = true;
+            boolean eAttending;
+            boolean eCreator;
+            try {
+                JSONObject event = eventsJson.getJSONObject(i);
+                eventId = event.getInt("id");
+                eventName = event.getString("name");
+                eAttending = event.getBoolean("attending");
+                eCreator = event.getBoolean("creator");
+            } catch (JSONException e) {
+                e.printStackTrace();
+                cacheEvents(appContext);
+                return getEvents(appContext, attending, creator);
+            }
+            if(attending && !eAttending)
+                add = false;
+            if(creator && !eCreator)
+                add = false;
+            if(add)
+                map.put(eventName, eventId);
         }
 
         return map;
