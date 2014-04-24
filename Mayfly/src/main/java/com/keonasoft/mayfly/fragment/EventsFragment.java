@@ -2,7 +2,6 @@ package com.keonasoft.mayfly.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.keonasoft.mayfly.activity.AppActivity;
-import com.keonasoft.mayfly.activity.EventActivity;
 import com.keonasoft.mayfly.R;
 import com.keonasoft.mayfly.model.User;
 
@@ -25,30 +23,32 @@ import java.util.Map;
 /**
  * A fragment for "Notifications" page.
  */
-public class NotificationsFragment extends android.app.Fragment {
+public class EventsFragment extends android.app.Fragment {
     /**
      * The fragment argument representing the section number for this
      * fragment.
      */
-    private static final String ARG_SECTION_NUMBER = "section_number";
+    protected static final String ARG_SECTION_NUMBER = "section_number";
 
-    private View rootView;
-    private Map<String, Integer> eventMap;
-    private Context rootContext;
+    protected View rootView;
+    protected Map<String, Integer> eventMap;
+    protected Context rootContext;
+    protected final boolean ATTENDING = false;
+    protected final boolean CREATOR = false;
 
     /**
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static NotificationsFragment newInstance(int sectionNumber) {
-        NotificationsFragment fragment = new NotificationsFragment();
+    public static EventsFragment newInstance(int sectionNumber) {
+        EventsFragment fragment = new EventsFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public NotificationsFragment() {
+    public EventsFragment() {
     }
 
     @Override
@@ -56,7 +56,7 @@ public class NotificationsFragment extends android.app.Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_lists, container, false);
         rootContext = rootView.getContext();
-        displayNotifications();
+        displayEvents(ATTENDING, CREATOR);
 
         return rootView;
     }
@@ -68,13 +68,13 @@ public class NotificationsFragment extends android.app.Fragment {
                 getArguments().getInt(ARG_SECTION_NUMBER));
     }
 
-    private void displayNotifications(){
+    public void displayEvents(final boolean ATTENDING, final boolean CREATOR){
 
         final ListView LISTVIEW = (ListView) rootView.findViewById(R.id.section_List);
 
         new AsyncTask<Void, Void, Boolean>(){
             protected Boolean doInBackground(Void... params) {
-                eventMap = User.getInstance().getEvents(rootContext, false, false);
+                eventMap = User.getInstance().getEvents(rootContext, ATTENDING, CREATOR);
                 return true;
             }
 

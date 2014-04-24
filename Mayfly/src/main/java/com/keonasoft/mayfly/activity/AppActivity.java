@@ -23,11 +23,11 @@ import android.widget.TextView;
 import com.facebook.Session;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.keonasoft.mayfly.fragment.AttendingEventsFragment;
+import com.keonasoft.mayfly.fragment.EventsFragment;
 import com.keonasoft.mayfly.fragment.FriendsFragment;
 import com.keonasoft.mayfly.helper.HttpHelper;
 import com.keonasoft.mayfly.fragment.MyEventsFragment;
 import com.keonasoft.mayfly.fragment.NavigationDrawerFragment;
-import com.keonasoft.mayfly.fragment.NotificationsFragment;
 import com.keonasoft.mayfly.R;
 import com.keonasoft.mayfly.model.User;
 
@@ -297,7 +297,7 @@ public class AppActivity extends Activity
         switch (position) {
             case 0:
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container, NotificationsFragment.newInstance(position + 1))
+                        .replace(R.id.container, EventsFragment.newInstance(position + 1))
                         .commit();
                 break;
             case 1:
