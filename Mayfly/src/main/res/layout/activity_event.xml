@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/eventLocationTextView"
-        android:paddingTop="20dp" />
+        android:paddingTop="5dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -56,51 +56,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/eventTimeTextView"
-        android:paddingTop="10dp" />
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.25"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Min: "
-            android:paddingTop="10dp" />
-
-         <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.25"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Max: "
-        android:paddingTop="10dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.25"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/eventMinTextView"
-            android:paddingTop="10dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.25"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/eventMaxTextView"
-            android:paddingTop="10dp" />
-    </LinearLayout>
+        android:paddingTop="5dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -114,8 +70,13 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/eventDescriptionTextView"
-        android:paddingTop="10dp" />
+        android:paddingTop="5dp" />
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/minMaxLayout"></LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"

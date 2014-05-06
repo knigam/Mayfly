@@ -58,10 +58,8 @@ public class AppActivity extends Activity
     String regid;
     GoogleCloudMessaging gcm;
     private static final String TAG = "AppActivity";
-    public static final String EXTRA_MESSAGE = "message";
     public static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
-    private static final String PROPERTY_USER_ID = "registered_user_id";
     private static final String USER_EMAIL = "user_email";
     String SENDER_ID = "230395939091";
     TextView mDisplay;

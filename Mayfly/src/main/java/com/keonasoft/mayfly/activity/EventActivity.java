@@ -1,11 +1,14 @@
 package com.keonasoft.mayfly.activity;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.keonasoft.mayfly.R;
@@ -40,7 +43,27 @@ public class EventActivity extends Activity {
                 if(success){
                     setContentView(R.layout.activity_event);
                     TextView name = (TextView) findViewById(R.id.eventNameTextView);
+                    TextView description = (TextView) findViewById(R.id.eventDescriptionTextView);
+                    TextView time = (TextView) findViewById(R.id.eventTimeTextView);
+                    TextView location = (TextView) findViewById(R.id.eventLocationTextView);
+                    LinearLayout minMaxLayout = (LinearLayout) findViewById(R.id.minMaxLayout);
+
                     name.setText(event.getName());
+                    description.setText(event.getDescription());
+                    time.setText(event.getTime());
+                    location.setText(event.getLocation());
+                    if(event.getMin() != -1) {
+                        TextView min = new TextView(EventActivity.this);
+                        min.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, (float)0.5));
+                        min.setText("min: " + event.getMin());
+                        minMaxLayout.addView(min);
+                    }
+                    if(event.getMin() != -1) {
+                        TextView max = new TextView(EventActivity.this);
+                        max.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, (float)0.5));
+                        max.setText("max: " + event.getMax());
+                        minMaxLayout.addView(max);
+                    }
                 }
                 else {
                     finish();
