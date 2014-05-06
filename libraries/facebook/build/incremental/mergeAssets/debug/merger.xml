@@ -2,10 +2,10 @@
 <merger>
 
     <dataSet config="main" >
-        <source path="/home/kushal/Documents/git/Mayfly/libraries/facebook/src/main/assets" />
+        <source path="/home/atul/dev/git/Mayfly/libraries/facebook/src/main/assets" />
     </dataSet>
     <dataSet config="debug" >
-        <source path="/home/kushal/Documents/git/Mayfly/libraries/facebook/src/debug/assets" />
+        <source path="/home/atul/dev/git/Mayfly/libraries/facebook/src/debug/assets" />
     </dataSet>
 
 </merger>

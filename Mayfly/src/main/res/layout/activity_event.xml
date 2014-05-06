@@ -3,11 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:paddingTop="10dp">
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="50dp" />
+    android:paddingTop="10dp"
+    android:weightSum="1">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -18,7 +15,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Large Text"
             android:id="@+id/eventNameTextView"
             android:layout_gravity="center_horizontal"
             android:layout_weight="0.8" />
@@ -39,6 +35,12 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Location: "
+        android:paddingTop="20dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/eventLocationTextView"
         android:paddingTop="20dp" />
 
@@ -47,28 +49,88 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Time: "
-        android:id="@+id/eventTimeTextView"
         android:paddingTop="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Friends Going: "
-        android:id="@+id/eventFriendsGoingTextView"
+        android:id="@+id/eventTimeTextView"
         android:paddingTop="10dp" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:id="@+id/space" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
+        android:layout_height="wrap_content">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Min: "
+            android:paddingTop="10dp" />
+
+         <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.25"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Max: "
+        android:paddingTop="10dp" />
     </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/eventMinTextView"
+            android:paddingTop="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/eventMaxTextView"
+            android:paddingTop="10dp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Description: "
+        android:paddingTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/eventDescriptionTextView"
+        android:paddingTop="10dp" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="People Attending: "
+        android:paddingTop="10dp" />
+
+
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </ListView>
+
 
 </LinearLayout>
