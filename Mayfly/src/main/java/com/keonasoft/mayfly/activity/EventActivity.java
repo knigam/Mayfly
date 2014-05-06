@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.keonasoft.mayfly.R;
 import com.keonasoft.mayfly.model.Event;
@@ -66,6 +67,7 @@ public class EventActivity extends Activity {
                     }
                 }
                 else {
+                    Toast.makeText(EventActivity.this, "Can't connect to network", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }

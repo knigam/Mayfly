@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
 
+import com.keonasoft.mayfly.MyException;
 import com.keonasoft.mayfly.activity.AppActivity;
 import com.keonasoft.mayfly.R;
 import com.keonasoft.mayfly.activity.EventActivity;
@@ -94,7 +95,11 @@ public class FriendsFragment extends android.app.Fragment {
 
         new AsyncTask<Void, Void, Boolean>(){
             protected Boolean doInBackground(Void... params) {
-                friendMap = User.getInstance().getFriends(rootContext);
+                try {
+                    friendMap = User.getInstance().getFriends(rootContext);
+                } catch (MyException e) {
+                    return false;
+                }
                 return true;
             }
 

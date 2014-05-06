@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.keonasoft.mayfly.MyException;
 import com.keonasoft.mayfly.helper.HttpHelper;
 import com.keonasoft.mayfly.R;
 import com.keonasoft.mayfly.model.User;
@@ -315,7 +316,11 @@ public class LoginActivity extends Activity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            result = HttpHelper.httpPost(uri, userJson);
+            try {
+                result = HttpHelper.httpPost(uri, userJson);
+            } catch (Exception e) {
+                return false;
+            }
             try {
                 String success = result.getString("success");
                 if(success.equals("true")){

@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.security.spec.ECField;
 import java.util.Map;
 
 /**
@@ -79,23 +80,13 @@ public class HttpHelper {
      * @param json
      * @return
      */
-    public static JSONObject httpPost(String uri, JSONObject json) {
-        try {
+    public static JSONObject httpPost(String uri, JSONObject json) throws Exception{
             DefaultHttpClient httpclient = getHttpClient();
             HttpPost httpPost = new HttpPost(uri);
             httpPost.setEntity(new StringEntity(json.toString()));
             httpPost.setHeader("Accept", "application/json");
             httpPost.setHeader("Content-type", "application/json");
             return httpToJson(httpclient.execute(httpPost));
-
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     /**
@@ -103,16 +94,14 @@ public class HttpHelper {
      * @param uri
      * @return
      */
-    public static JSONObject httpDelete(String uri) {
+    public static JSONObject httpDelete(String uri) throws Exception{
         DefaultHttpClient httpClient = getHttpClient();
         HttpDelete httpDelete = new HttpDelete(uri);
         try {
             return httpToJson(httpClient.execute(httpDelete));
         } catch (IOException e) {
-            System.out.println("ERROR");
-            e.printStackTrace();
+            throw new Exception("Can't complete httpDelete request");
         }
-        return null;
     }
 
     /**
@@ -120,16 +109,14 @@ public class HttpHelper {
      * @param uri
      * @return
      */
-    public static JSONObject httpGet(String uri) {
+    public static JSONObject httpGet(String uri) throws Exception{
         DefaultHttpClient httpclient = getHttpClient();
         HttpGet httpget = new HttpGet(uri);
         try {
             return httpToJson(httpclient.execute(httpget));
         } catch (IOException e) {
-            System.out.println("ERROR");
-            e.printStackTrace();
+            throw new Exception("Can't complete httpGet request");
         }
-        return null;
     }
 
     /**
@@ -139,16 +126,18 @@ public class HttpHelper {
      * @param response
      * @return
      */
-    public static JSONObject httpToJson(HttpResponse response) {
+    public static JSONObject httpToJson(HttpResponse response) throws Exception{
         try {
             String json = EntityUtils.toString(response.getEntity());
             System.out.println(json);
-            return new JSONObject(json);
+            JSONObject jsonObject = new JSONObject(json);
+            if (jsonObject == null)
+                throw new Exception("Returned JSON is Null");
+            return jsonObject;
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new Exception(e.getMessage());
         } catch (JSONException e) {
-            e.printStackTrace();
+            throw new Exception(e.getMessage());
         }
-        return null;
     }
 }

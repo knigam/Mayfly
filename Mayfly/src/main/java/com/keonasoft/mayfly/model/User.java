@@ -75,8 +75,13 @@ public class User {
      * @param URI
      * @return
      */
-    public boolean signOut(final String URI){
-        JSONObject result = HttpHelper.httpDelete(URI);
+    public boolean signOut(final String URI) throws MyException{
+        JSONObject result = null;
+        try {
+            result = HttpHelper.httpDelete(URI);
+        } catch (Exception e) {
+            throw new MyException(e);
+        }
         try {
             if(result.getString("success").equals("true")) {
                 return true;
@@ -92,9 +97,14 @@ public class User {
      * and saves a string representing that array to a cache file
      * @param appContext
      */
-    public void cacheFriends(Context appContext){
+    public void cacheFriends(Context appContext) throws MyException{
         String URI = appContext.getString(R.string.conn) + appContext.getString(R.string.friends_show);
-        JSONObject result = HttpHelper.httpGet(URI);
+        JSONObject result = null;
+        try {
+            result = HttpHelper.httpGet(URI);
+        } catch (Exception e) {
+            throw  new MyException(appContext, e);
+        }
         final String FILENAME = appContext.getString(R.string.friends_cache);
         File file = new File(appContext.getCacheDir(), FILENAME);
 
@@ -120,7 +130,7 @@ public class User {
      * and returns a map between friend's ids and names.
      * @return
      */
-    public Map<String, Integer> getFriends(Context appContext){
+    public Map<String, Integer> getFriends(Context appContext) throws MyException{
         final String FILENAME = appContext.getString(R.string.friends_cache);
         File file = new File(appContext.getCacheDir(), FILENAME);
         String friends;
@@ -175,9 +185,14 @@ public class User {
      * and saves a string representing that array to a cache file
      * @param appContext
      */
-    public void cacheEvents(Context appContext){
+    public void cacheEvents(Context appContext) throws MyException{
         String URI = appContext.getString(R.string.conn) + appContext.getString(R.string.events_show);
-        JSONObject result = HttpHelper.httpGet(URI);
+        JSONObject result = null;
+        try {
+            result = HttpHelper.httpGet(URI);
+        } catch (Exception e) {
+            throw new MyException(appContext, e);
+        }
         final String FILENAME = appContext.getString(R.string.events_cache);
         File file = new File(appContext.getCacheDir(), FILENAME);
 
@@ -203,7 +218,7 @@ public class User {
      * and returns a map between event ids and names.
      * @return
      */
-    public Map<Integer, String> getEvents(Context appContext, boolean attending, boolean creator){
+    public Map<Integer, String> getEvents(Context appContext, boolean attending, boolean creator) throws MyException{
         final String FILENAME = appContext.getString(R.string.events_cache);
         File file = new File(appContext.getCacheDir(), FILENAME);
         String friends = new String();

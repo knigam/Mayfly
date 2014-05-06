@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.keonasoft.mayfly.MyException;
+
 import org.json.JSONObject;
 
 import java.sql.SQLClientInfoException;
@@ -54,7 +56,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         db.execSQL(CREATE_EVENT_TABLE);
         db.execSQL(CREATE_ATTENDING_USER_TABLE);
 
-        JSONObject friendships = HttpHelper.httpGet("www.mymayfly.com/friendships");
+        try {
+            JSONObject friendships = HttpHelper.httpGet("www.mymayfly.com/friendships");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -68,7 +74,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper{
         this.onCreate(db);
     }
 
-    public void updateFriends(){
+    public void updateFriends() throws Exception {
         String uri = "www.mymayfly.com/frienships";
         JSONObject result = HttpHelper.httpGet(uri);
 

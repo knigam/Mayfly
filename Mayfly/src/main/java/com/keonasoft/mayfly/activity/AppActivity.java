@@ -19,9 +19,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.Session;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.keonasoft.mayfly.MyException;
 import com.keonasoft.mayfly.fragment.AttendingEventsFragment;
 import com.keonasoft.mayfly.fragment.EventsFragment;
 import com.keonasoft.mayfly.fragment.FriendsFragment;
@@ -35,6 +37,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.security.spec.ECField;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -78,10 +81,20 @@ public class AppActivity extends Activity
         }
         setContentView(R.layout.activity_app);
         
-        new AsyncTask<Void, Void, Void>(){
-            protected Void doInBackground(Void... params){
-                User.getInstance().cacheEvents(context);
-                return null;
+        new AsyncTask<Void, Void, Boolean>(){
+            @Override
+            protected Boolean doInBackground(Void... params){
+                try {
+                    User.getInstance().cacheEvents(context);
+                } catch (MyException e) {
+                    return false;
+                }
+                return true;
+            }
+            @Override
+            protected void onPostExecute(Boolean success){
+                if(!success)
+                    Toast.makeText(AppActivity.this, "Can't connect to network", Toast.LENGTH_SHORT).show();
             }
         }.execute(null, null, null);
         
@@ -222,7 +235,11 @@ public class AppActivity extends Activity
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        result = HttpHelper.httpPost(uri, userJson);
+        try {
+            result = HttpHelper.httpPost(uri, userJson);
+        } catch (Exception e) {
+            return false;
+        }
         try {
             String success = result.getString("success");
             if(success.equals("true")){
@@ -259,7 +276,12 @@ public class AppActivity extends Activity
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                JSONObject result = HttpHelper.httpPost(uri, userJson);
+                JSONObject result = null;
+                try {
+                    result = HttpHelper.httpPost(uri, userJson);
+                } catch (Exception e) {
+                    return false;
+                }
                 try {
                     String success = result.getString("success");
                     if(success.equals("true")){
@@ -401,7 +423,11 @@ public class AppActivity extends Activity
 
         new AsyncTask<Void, Void, Boolean>(){
             protected Boolean doInBackground(Void... params) {
-                return User.getInstance().signOut(URI);
+                try {
+                    return User.getInstance().signOut(URI);
+                } catch (MyException e) {
+                    return false;
+                }
             }
             protected void onPostExecute(final Boolean success) {
                 if (success) {

@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.keonasoft.mayfly.MyException;
 import com.keonasoft.mayfly.activity.AppActivity;
 import com.keonasoft.mayfly.R;
 import com.keonasoft.mayfly.activity.EventActivity;
@@ -76,7 +77,11 @@ public class EventsFragment extends android.app.Fragment {
 
         new AsyncTask<Void, Void, Boolean>(){
             protected Boolean doInBackground(Void... params) {
-                eventMap = User.getInstance().getEvents(rootContext, ATTENDING, CREATOR);
+                try {
+                    eventMap = User.getInstance().getEvents(rootContext, ATTENDING, CREATOR);
+                } catch (MyException e) {
+                    return false;
+                }
                 return true;
             }
 

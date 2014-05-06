@@ -2,6 +2,7 @@ package com.keonasoft.mayfly.model;
 
 import android.content.Context;
 
+import com.keonasoft.mayfly.MyException;
 import com.keonasoft.mayfly.helper.HttpHelper;
 
 import org.json.JSONException;
@@ -44,7 +45,12 @@ public class Event {
     }
 
     public Event getEvent(final String URI){
-        JSONObject result = HttpHelper.httpGet(URI);
+        JSONObject result = null;
+        try {
+            result = HttpHelper.httpGet(URI);
+        } catch (Exception e) {
+            return null;
+        }
         try {
             name = result.getString("name");
             description = result.getString("description");
