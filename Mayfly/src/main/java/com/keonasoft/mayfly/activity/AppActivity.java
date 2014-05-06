@@ -79,7 +79,14 @@ public class AppActivity extends Activity
             registerInBackground();
         }
         setContentView(R.layout.activity_app);
-
+        
+        new AsyncTask<Void, Void, Void>(){
+            protected Void doInBackground(Void... params){
+                User.getInstance().cacheEvents(context);
+                return null;
+            }
+        }.execute(null, null, null);
+        
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -115,7 +122,7 @@ public class AppActivity extends Activity
             deleteRegistrationIDFromBackend(registrationId);
             return "";
         }
-        new AsyncTask<Void, Void, Boolean>(){
+/*        new AsyncTask<Void, Void, Boolean>(){
             @Override
             protected Boolean doInBackground(Void... params){
                 boolean success = sendRegistrationIdToBackend(registrationId);
@@ -126,7 +133,7 @@ public class AppActivity extends Activity
                     signUserOut();
                 }
             }
-        }.execute(null, null, null);
+        }.execute(null, null, null);*/
         return registrationId;
     }
 

@@ -186,8 +186,8 @@ public class LoginActivity extends Activity {
 
         //*****************************
         //THIS IS FOR DEBUGGING ONLY!!!
-        mEmail = "kushal.nigam1@gmail.com";
-        mPassword = "1234qwer";
+        //mEmail = "kushal.nigam1@gmail.com"; Todo remove this
+        //mPassword = "1234qwer";
         //*****************************
 
         // Check for valid Password Confirmation

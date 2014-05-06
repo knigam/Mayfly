@@ -203,12 +203,12 @@ public class User {
      * and returns a map between event ids and names.
      * @return
      */
-    public Map<String, Integer> getEvents(Context appContext, boolean attending, boolean creator){
+    public Map<Integer, String> getEvents(Context appContext, boolean attending, boolean creator){
         final String FILENAME = appContext.getString(R.string.events_cache);
         File file = new File(appContext.getCacheDir(), FILENAME);
         String friends = new String();
         JSONArray eventsJson;
-        Map<String, Integer> map = new HashMap<String, Integer>();
+        Map<Integer, String> map = new HashMap<Integer, String>();
         BufferedReader buf;
 
         try {
@@ -257,7 +257,7 @@ public class User {
             if(creator && !eCreator)
                 add = false;
             if(add)
-                map.put(eventName, eventId);
+                map.put(eventId, eventName);
         }
 
         return map;

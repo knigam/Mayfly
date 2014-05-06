@@ -1,18 +1,52 @@
 package com.keonasoft.mayfly.activity;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.keonasoft.mayfly.R;
+import com.keonasoft.mayfly.model.Event;
+
+import org.w3c.dom.Text;
 
 public class EventActivity extends Activity {
+
+    private int eventId;
+    private Event event;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event);
+        Intent intent = getIntent();
+        eventId = intent.getIntExtra("eventId", -1);
+        event = new Event(eventId);
+        final String URI = getString(R.string.conn) + getString(R.string.event_show) + "/" + eventId + ".json";
+
+        new AsyncTask<Void, Void, Boolean>(){
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                event = event.getEvent(URI);
+                if(event == null)
+                    return false;
+                else
+                    return true;
+            }
+            @Override
+            protected void onPostExecute(final Boolean success){
+                if(success){
+                    setContentView(R.layout.activity_event);
+                    TextView name = (TextView) findViewById(R.id.eventNameTextView);
+                    name.setText(event.getName());
+                }
+                else {
+                    finish();
+                }
+            }
+        }.execute(null, null, null);
     }
 
 

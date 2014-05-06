@@ -2,6 +2,7 @@ package com.keonasoft.mayfly.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.ListView;
 
 import com.keonasoft.mayfly.activity.AppActivity;
 import com.keonasoft.mayfly.R;
+import com.keonasoft.mayfly.activity.EventActivity;
 import com.keonasoft.mayfly.model.User;
 
 import java.util.ArrayList;
@@ -31,7 +33,7 @@ public class EventsFragment extends android.app.Fragment {
     protected static final String ARG_SECTION_NUMBER = "section_number";
 
     protected View rootView;
-    protected Map<String, Integer> eventMap;
+    protected Map<Integer, String> eventMap;
     protected Context rootContext;
     protected final boolean ATTENDING = false;
     protected final boolean CREATOR = false;
@@ -81,9 +83,14 @@ public class EventsFragment extends android.app.Fragment {
             @Override
             protected void onPostExecute(Boolean success) {
                 List<String> eventNames = new ArrayList<String>();
-                for (String key: eventMap.keySet()){
-                    eventNames.add(key);
+                List<Integer> eventIds = new ArrayList<Integer>();
+
+                for (Integer key: eventMap.keySet()){
+                    eventIds.add(key);
+                    eventNames.add(eventMap.get(key));
                 }
+                final List<Integer> EVENT_IDS = eventIds;
+
                 ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
                         android.R.layout.simple_list_item_1, eventNames);
                 dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -92,7 +99,10 @@ public class EventsFragment extends android.app.Fragment {
                 LISTVIEW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        //TODO change this to show friend info
+                        int eventId = EVENT_IDS.get(position);
+                        Intent intent = new Intent(getActivity(), EventActivity.class);
+                        intent.putExtra("eventId", eventId);
+                        startActivity(intent);
                     }
                 });
             }

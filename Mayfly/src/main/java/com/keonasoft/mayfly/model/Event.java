@@ -1,5 +1,12 @@
 package com.keonasoft.mayfly.model;
 
+import android.content.Context;
+
+import com.keonasoft.mayfly.helper.HttpHelper;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.sql.Time;
 
 /**
@@ -10,18 +17,21 @@ public class Event {
     private int id;
     private String name;
     private String description;
-    private Time time;
+    private String time;
     private String location;
     private Integer min;
     private Integer max;
     private Boolean attending;
-    private Boolean master;
+    private Boolean creator;
 
     public Event() {}
 
-    public Event(int id, String name, String description, Time time, String location, Integer min, Integer max,
-                 Boolean attending, Boolean master){
-        super();
+    public Event(int id){
+        this.id = id;
+    }
+
+    public Event(int id, String name, String description, String time, String location, Integer min, Integer max,
+                 Boolean attending, Boolean creator){
         this.id = id;
         this.name = name;
         this.description = description;
@@ -30,7 +40,27 @@ public class Event {
         this.min = min;
         this.max = max;
         this.attending = attending;
-        this.master = master;
+        this.creator = creator;
+    }
+
+    public Event getEvent(final String URI){
+        JSONObject result = HttpHelper.httpGet(URI);
+        try {
+            name = result.getString("name");
+            description = result.getString("description");
+            time = result.getString("time");
+            location = result.getString("location");
+            min = result.getInt("min");
+            max = result.getInt("max");
+            attending = result.getBoolean("attending");
+            creator = result.getBoolean("creator");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return this;
     }
 
     public int getId() {
@@ -57,11 +87,11 @@ public class Event {
         this.description = description;
     }
 
-    public Time getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Time time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
@@ -97,12 +127,12 @@ public class Event {
         this.attending = attending;
     }
 
-    public Boolean getMaster() {
-        return master;
+    public Boolean getCreator() {
+        return creator;
     }
 
-    public void setMaster(Boolean master) {
-        this.master = master;
+    public void setCreator(Boolean master) {
+        this.creator = master;
     }
 
     @Override
@@ -116,7 +146,7 @@ public class Event {
                 ", min=" + min +
                 ", max=" + max +
                 ", attending=" + attending +
-                ", master=" + master +
+                ", creator=" + creator +
                 '}';
     }
 }
