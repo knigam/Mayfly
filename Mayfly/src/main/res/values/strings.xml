@@ -24,6 +24,7 @@
     <string name="friends_show">/friends.json</string>
     <string name="events_show">/events.json</string>
     <string name="event_show">/event</string>
+    <string name="invite_update">/invites/update.json</string>
 
     <!-- Cache Files -->
     <string name="friends_cache">mayfly_friends_cache</string>

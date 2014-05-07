@@ -81,6 +81,26 @@ public class AppActivity extends Activity
         }
         setContentView(R.layout.activity_app);
         
+        recacheEvents();
+        
+        mNavigationDrawerFragment = (NavigationDrawerFragment)
+                getFragmentManager().findFragmentById(R.id.navigation_drawer);
+        mTitle = getTitle();
+
+        // Set up the drawer.
+        mNavigationDrawerFragment.setUp(
+                R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
+        System.out.println(regid);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        recacheEvents();
+    }
+
+    private void recacheEvents(){
         new AsyncTask<Void, Void, Boolean>(){
             @Override
             protected Boolean doInBackground(Void... params){
@@ -97,16 +117,6 @@ public class AppActivity extends Activity
                     Toast.makeText(AppActivity.this, "Can't connect to network", Toast.LENGTH_SHORT).show();
             }
         }.execute(null, null, null);
-        
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
-
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
-        System.out.println(regid);
     }
 
     /**

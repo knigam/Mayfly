@@ -7,15 +7,23 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.keonasoft.mayfly.R;
+import com.keonasoft.mayfly.helper.HttpHelper;
 import com.keonasoft.mayfly.model.Event;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class EventActivity extends Activity {
 
@@ -48,6 +56,7 @@ public class EventActivity extends Activity {
                     TextView time = (TextView) findViewById(R.id.eventTimeTextView);
                     TextView location = (TextView) findViewById(R.id.eventLocationTextView);
                     LinearLayout minMaxLayout = (LinearLayout) findViewById(R.id.minMaxLayout);
+                    ToggleButton eventAttendingToggleButton = (ToggleButton) findViewById(R.id.eventAttendingToggleButton);
 
                     name.setText(event.getName());
                     description.setText(event.getDescription());
@@ -65,10 +74,60 @@ public class EventActivity extends Activity {
                         max.setText("max: " + event.getMax());
                         minMaxLayout.addView(max);
                     }
+                    if(event.getAttending())
+                        eventAttendingToggleButton.setChecked(true);
                 }
                 else {
                     Toast.makeText(EventActivity.this, "Can't connect to network", Toast.LENGTH_SHORT).show();
                     finish();
+                }
+            }
+        }.execute(null, null, null);
+    }
+
+    /**
+     * On click listener for the Mayfly login button
+     * @param view
+     */
+    public void toggleAttendingEvent(View view){
+        final ToggleButton eventAttendingToggleButton = (ToggleButton) findViewById(R.id.eventAttendingToggleButton);
+        final String URI = getString(R.string.conn) + getString(R.string.invite_update);
+
+        new AsyncTask<Void, Void, Boolean>(){
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                JSONObject result = new JSONObject();
+
+                try {
+                    result.put("event_id", event.getId());
+                    result.put("attending", eventAttendingToggleButton.isChecked());
+                } catch (JSONException e) {
+                    return false;
+                }
+
+                try {
+                    result = HttpHelper.httpPost(URI, result);
+                } catch (Exception e) {
+                    return false;
+                }
+                try {
+                    String success = result.getString("success");
+                    if(success.equals("true")){
+                        return true;
+                    }
+                    else if (success.equals("false")){
+                        return false;
+                    }
+                } catch (JSONException e) {
+                    return false;
+                }
+                return false;
+            }
+            @Override
+            protected void onPostExecute(final Boolean success){
+                if(!success) {
+                    eventAttendingToggleButton.setChecked(event.getAttending());
+                    Toast.makeText(EventActivity.this, "Can't update attending status", Toast.LENGTH_SHORT).show();
                 }
             }
         }.execute(null, null, null);
