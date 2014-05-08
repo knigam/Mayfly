@@ -68,7 +68,7 @@ public class EventActivity extends Activity {
                         min.setText("min: " + event.getMin());
                         minMaxLayout.addView(min);
                     }
-                    if(event.getMin() != -1) {
+                    if(event.getMax() != -1) {
                         TextView max = new TextView(EventActivity.this);
                         max.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, (float)0.5));
                         max.setText("max: " + event.getMax());

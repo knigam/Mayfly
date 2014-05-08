@@ -409,19 +409,21 @@ public class AppActivity extends Activity
         }
         if (id == R.id.action_logout){
             Session session = Session.getActiveSession();
-//            if (!session.isClosed()) {
-//                session.closeAndClearTokenInformation();
-//                finish();
-//                Intent intent = new Intent(getBaseContext(), MainActivity.class);
-//                startActivity(intent);
-//            }
-//            //This signs out through devise
-//            else{
             deleteRegistrationIDFromBackend(regid);
             signUserOut();
-//            }
+        }
+        if (id == R.id.action_new_event){
+            createNewEvent();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * This method starts the new event activity
+     */
+    private void createNewEvent(){
+        Intent intent = new Intent(AppActivity.this, NewEventActivity.class);
+        startActivity(intent);
     }
 
     /**
@@ -455,47 +457,4 @@ public class AppActivity extends Activity
             }
         }.execute((Void) null);
     }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_app, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
-            return rootView;
-        }
-
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            ((AppActivity) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
-        }
-    }
-
 }

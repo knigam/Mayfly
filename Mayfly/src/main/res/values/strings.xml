@@ -12,7 +12,18 @@
     <string name="title_section4">Friends</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="please_wait_progress">Please wait&#8230;</string>
+
+    <!-- Actions -->
     <string name="action_logout">Log out</string>
+    <string name="action_new_event">New Event</string>
+
+    <!-- Error Messages -->
+    <string name="error_not_int">Value must be an integer</string>
+    <string name="error_min_max">Min value must be less than max value</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="error_description_too_long">Description must be less than 255 character</string>
 
     <!-- Routes -->
     <string name="conn">http://www.mymayfly.com</string>
@@ -22,6 +33,7 @@
     <string name="devices_create">/devices/create.json</string>
     <string name="devices_destroy">/devices/destroy.json</string>
     <string name="friends_show">/friends.json</string>
+    <string name="events_create">/events/create.json</string>
     <string name="events_show">/events.json</string>
     <string name="event_show">/event</string>
     <string name="invite_update">/invites/update.json</string>
