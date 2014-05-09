@@ -5,10 +5,13 @@ import android.content.Context;
 import com.keonasoft.mayfly.MyException;
 import com.keonasoft.mayfly.helper.HttpHelper;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.Time;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by kushal on 4/12/14.
@@ -24,6 +27,7 @@ public class Event {
     private Integer max;
     private Boolean attending;
     private Boolean creator;
+    private Map<Integer, String> usersAttending;
 
     public Event() {}
 
@@ -46,6 +50,7 @@ public class Event {
 
     public Event getEvent(final String URI){
         JSONObject result = null;
+        usersAttending = new HashMap<Integer, String>();
         try {
             result = HttpHelper.httpGet(URI);
         } catch (Exception e) {
@@ -60,6 +65,15 @@ public class Event {
             max = result.getInt("max");
             attending = result.getBoolean("attending");
             creator = result.getBoolean("creator");
+
+            //Get the list of users attending
+            JSONArray users = result.getJSONArray("users_attending");
+            for(int i = 0; i < users.length(); i++){
+                JSONObject user = users.getJSONObject(i);
+                Integer id = user.getInt("id");
+                String name = user.getString("name");
+                usersAttending.put(id, name);
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -141,18 +155,27 @@ public class Event {
         this.creator = master;
     }
 
+    public Map<Integer, String> getUsersAttending() {
+        return usersAttending;
+    }
+
+    public void setUsersAttending(Map<Integer, String> usersAttending) {
+        this.usersAttending = usersAttending;
+    }
+
     @Override
     public String toString() {
         return "Event{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", time=" + time +
+                ", time='" + time + '\'' +
                 ", location='" + location + '\'' +
                 ", min=" + min +
                 ", max=" + max +
                 ", attending=" + attending +
                 ", creator=" + creator +
+                ", usersAttending=" + usersAttending +
                 '}';
     }
 }

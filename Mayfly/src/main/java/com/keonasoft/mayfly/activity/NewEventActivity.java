@@ -16,9 +16,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
+import com.keonasoft.mayfly.MyException;
 import com.keonasoft.mayfly.R;
 import com.keonasoft.mayfly.helper.HttpHelper;
 import com.keonasoft.mayfly.model.Event;
+import com.keonasoft.mayfly.model.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -266,12 +268,17 @@ public class NewEventActivity extends Activity {
             try {
                 if(json.getBoolean("success")){
                     mEvent.setId(json.getInt("event_id"));
+                    //tries to recache events now so information is up to date
+                    User.getInstance().cacheEvents(getApplicationContext());
                     return true;
                 }
                 else{
                     message = json.getString("message");
                     return false;
                 }
+            } catch (MyException e) {
+                //even if the re-cache fails, the event was successfully created
+                return true;
             } catch (JSONException e) {
                 e.printStackTrace();
                 return false;

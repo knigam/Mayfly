@@ -9,7 +9,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -22,7 +25,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class EventActivity extends Activity {
@@ -57,11 +62,14 @@ public class EventActivity extends Activity {
                     TextView location = (TextView) findViewById(R.id.eventLocationTextView);
                     LinearLayout minMaxLayout = (LinearLayout) findViewById(R.id.minMaxLayout);
                     ToggleButton eventAttendingToggleButton = (ToggleButton) findViewById(R.id.eventAttendingToggleButton);
+                    ListView usersAttendingListView = (ListView) findViewById(R.id.usersAttendingListView);
 
                     name.setText(event.getName());
                     description.setText(event.getDescription());
                     time.setText(event.getTime());
                     location.setText(event.getLocation());
+
+                    //Determine if the min and max fields are applicable
                     if(event.getMin() != -1) {
                         TextView min = new TextView(EventActivity.this);
                         min.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, (float)0.5));
@@ -74,8 +82,35 @@ public class EventActivity extends Activity {
                         max.setText("max: " + event.getMax());
                         minMaxLayout.addView(max);
                     }
+
+                    //Determine if the attending toggle should be checked or not
                     if(event.getAttending())
                         eventAttendingToggleButton.setChecked(true);
+
+                    //Populate list of attending users
+                    List<String> userNames = new ArrayList<String>();
+                    List<Integer> userIds = new ArrayList<Integer>();
+
+                    for (Integer key: event.getUsersAttending().keySet()){
+                        userIds.add(key);
+                        userNames.add(event.getUsersAttending().get(key));
+                    }
+                    final List<Integer> EVENT_IDS = userIds;
+
+                    ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(EventActivity.this,
+                            android.R.layout.simple_list_item_1, userNames);
+                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    usersAttendingListView.setAdapter(dataAdapter);
+
+//                    usersAttendingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                        @Override
+//                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                            int eventId = EVENT_IDS.get(position);
+//                            Intent intent = new Intent(EventActivity.this, EventActivity.class);
+//                            intent.putExtra("eventId", eventId);
+//                            startActivity(intent);
+//                        }
+//                    });
                 }
                 else {
                     Toast.makeText(EventActivity.this, "Can't connect to network", Toast.LENGTH_SHORT).show();
