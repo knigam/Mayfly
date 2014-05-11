@@ -114,7 +114,7 @@ public class AppActivity extends Activity
             @Override
             protected void onPostExecute(Boolean success){
                 if(!success)
-                    Toast.makeText(AppActivity.this, "Can't connect to network", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AppActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show();
             }
         }.execute(null, null, null);
     }

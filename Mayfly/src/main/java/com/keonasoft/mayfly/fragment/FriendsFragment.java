@@ -39,7 +39,7 @@ public class FriendsFragment extends android.app.Fragment {
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
     private View rootView;
-    private Map<String, Integer> friendMap;
+    private Map<Integer, String> friendMap;
     private Context rootContext;
 
     /**
@@ -106,8 +106,11 @@ public class FriendsFragment extends android.app.Fragment {
             @Override
             protected void onPostExecute(Boolean success) {
                 List<String> friendNames = new ArrayList<String>();
-                for (String key: friendMap.keySet()){
-                    friendNames.add(key);
+                List<Integer> friendIds = new ArrayList<Integer>();
+
+                for (Integer key: friendMap.keySet()){
+                    friendNames.add(friendMap.get(key));
+                    friendIds.add(key);
                 }
                 ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
                         android.R.layout.simple_list_item_1, friendNames);

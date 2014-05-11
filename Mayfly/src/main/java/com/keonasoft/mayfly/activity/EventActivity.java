@@ -42,6 +42,7 @@ public class EventActivity extends Activity {
         eventId = intent.getIntExtra("eventId", -1);
         event = new Event(eventId);
         final String URI = getString(R.string.conn) + getString(R.string.event_show) + "/" + eventId + ".json";
+        setContentView(R.layout.activity_event);
 
         new AsyncTask<Void, Void, Boolean>(){
             @Override
@@ -55,7 +56,6 @@ public class EventActivity extends Activity {
             @Override
             protected void onPostExecute(final Boolean success){
                 if(success){
-                    setContentView(R.layout.activity_event);
                     TextView name = (TextView) findViewById(R.id.eventNameTextView);
                     TextView description = (TextView) findViewById(R.id.eventDescriptionTextView);
                     TextView time = (TextView) findViewById(R.id.eventTimeTextView);
@@ -160,7 +160,11 @@ public class EventActivity extends Activity {
             }
             @Override
             protected void onPostExecute(final Boolean success){
-                if(!success) {
+                if(success){
+                    finish();
+                    startActivity(getIntent());
+                }
+                else {
                     eventAttendingToggleButton.setChecked(event.getAttending());
                     Toast.makeText(EventActivity.this, "Can't update attending status", Toast.LENGTH_SHORT).show();
                 }

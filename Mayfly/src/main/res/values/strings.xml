@@ -12,14 +12,14 @@
     <string name="title_section4">Friends</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="please_wait_progress">Please wait&#8230;</string>
+    <string name="please_wait_progress">Please wait…</string>
 
     <!-- Actions -->
     <string name="action_logout">Log out</string>
     <string name="action_new_event">New Event</string>
 
     <!-- Error Messages -->
+    <string name="error_network">Can\'t connect to network</string>
     <string name="error_not_int">Value must be an integer</string>
     <string name="error_min_max">Min value must be less than max value</string>
     <string name="error_field_required">This field is required</string>
@@ -37,8 +37,12 @@
     <string name="events_show">/events.json</string>
     <string name="event_show">/event</string>
     <string name="invite_update">/invites/update.json</string>
+    <string name="invite_create">/invites/create.json</string>
 
     <!-- Cache Files -->
     <string name="friends_cache">mayfly_friends_cache</string>
     <string name="events_cache">mayfly_events_cache</string>
+    <string name="title_activity_invite">InviteActivity</string>
+    <string name="hello_world">Hello world!</string>
+
 </resources>

@@ -130,12 +130,12 @@ public class User {
      * and returns a map between friend's ids and names.
      * @return
      */
-    public Map<String, Integer> getFriends(Context appContext) throws MyException{
+    public Map<Integer, String> getFriends(Context appContext) throws MyException{
         final String FILENAME = appContext.getString(R.string.friends_cache);
         File file = new File(appContext.getCacheDir(), FILENAME);
         String friends;
         JSONArray friendsJson;
-        Map<String, Integer> map = new HashMap<String, Integer>();
+        Map<Integer, String> map = new HashMap<Integer, String>();
         BufferedReader buf;
 
         try {
@@ -174,7 +174,7 @@ public class User {
                 cacheFriends(appContext);
                 return getFriends(appContext);
             }
-            map.put(friendName, friendId);
+            map.put(friendId, friendName);
         }
 
         return map;
