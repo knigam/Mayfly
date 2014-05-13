@@ -1,6 +1,5 @@
 package com.keonasoft.mayfly.activity;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -9,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -23,32 +21,28 @@ import com.keonasoft.mayfly.model.Event;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class EventActivity extends Activity {
 
     private int eventId;
-    private Event event;
+    private Event mEvent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         eventId = intent.getIntExtra("eventId", -1);
-        event = new Event(eventId);
+        mEvent = new Event(eventId);
         final String URI = getString(R.string.conn) + getString(R.string.event_show) + "/" + eventId + ".json";
-        setContentView(R.layout.activity_event);
 
         new AsyncTask<Void, Void, Boolean>(){
             @Override
             protected Boolean doInBackground(Void... params) {
-                event = event.getEvent(URI);
-                if(event == null)
+                mEvent = mEvent.getEvent(URI);
+                if(mEvent == null)
                     return false;
                 else
                     return true;
@@ -56,6 +50,7 @@ public class EventActivity extends Activity {
             @Override
             protected void onPostExecute(final Boolean success){
                 if(success){
+                    setContentView(R.layout.activity_event);
                     TextView name = (TextView) findViewById(R.id.eventNameTextView);
                     TextView description = (TextView) findViewById(R.id.eventDescriptionTextView);
                     TextView time = (TextView) findViewById(R.id.eventTimeTextView);
@@ -64,36 +59,36 @@ public class EventActivity extends Activity {
                     ToggleButton eventAttendingToggleButton = (ToggleButton) findViewById(R.id.eventAttendingToggleButton);
                     ListView usersAttendingListView = (ListView) findViewById(R.id.usersAttendingListView);
 
-                    name.setText(event.getName());
-                    description.setText(event.getDescription());
-                    time.setText(event.getTime());
-                    location.setText(event.getLocation());
+                    name.setText(mEvent.getName());
+                    description.setText(mEvent.getDescription());
+                    time.setText(mEvent.getTime());
+                    location.setText(mEvent.getLocation());
 
                     //Determine if the min and max fields are applicable
-                    if(event.getMin() != -1) {
+                    if(mEvent.getMin() != -1) {
                         TextView min = new TextView(EventActivity.this);
                         min.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, (float)0.5));
-                        min.setText("min: " + event.getMin());
+                        min.setText("min: " + mEvent.getMin());
                         minMaxLayout.addView(min);
                     }
-                    if(event.getMax() != -1) {
+                    if(mEvent.getMax() != -1) {
                         TextView max = new TextView(EventActivity.this);
                         max.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, (float)0.5));
-                        max.setText("max: " + event.getMax());
+                        max.setText("max: " + mEvent.getMax());
                         minMaxLayout.addView(max);
                     }
 
                     //Determine if the attending toggle should be checked or not
-                    if(event.getAttending())
+                    if(mEvent.getAttending())
                         eventAttendingToggleButton.setChecked(true);
 
                     //Populate list of attending users
                     List<String> userNames = new ArrayList<String>();
                     List<Integer> userIds = new ArrayList<Integer>();
 
-                    for (Integer key: event.getUsersAttending().keySet()){
+                    for (Integer key: mEvent.getUsersAttending().keySet()){
                         userIds.add(key);
-                        userNames.add(event.getUsersAttending().get(key));
+                        userNames.add(mEvent.getUsersAttending().get(key));
                     }
                     final List<Integer> EVENT_IDS = userIds;
 
@@ -134,7 +129,7 @@ public class EventActivity extends Activity {
                 JSONObject result = new JSONObject();
 
                 try {
-                    result.put("event_id", event.getId());
+                    result.put("event_id", mEvent.getId());
                     result.put("attending", eventAttendingToggleButton.isChecked());
                 } catch (JSONException e) {
                     return false;
@@ -165,7 +160,7 @@ public class EventActivity extends Activity {
                     startActivity(getIntent());
                 }
                 else {
-                    eventAttendingToggleButton.setChecked(event.getAttending());
+                    eventAttendingToggleButton.setChecked(mEvent.getAttending());
                     Toast.makeText(EventActivity.this, "Can't update attending status", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -177,7 +172,7 @@ public class EventActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.event, menu);
+        getMenuInflater().inflate(R.menu.event, menu);
         return true;
     }
 
@@ -187,7 +182,11 @@ public class EventActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_invite) {
+            Intent intent = new Intent(EventActivity.this, InviteActivity.class);
+            intent.putExtra("eventId", mEvent.getId());
+            startActivity(intent);
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

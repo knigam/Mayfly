@@ -36,6 +36,7 @@ import com.keonasoft.mayfly.model.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.spec.ECField;
 import java.util.HashMap;
@@ -443,11 +444,20 @@ public class AppActivity extends Activity
             }
             protected void onPostExecute(final Boolean success) {
                 if (success) {
+                    // Clear shared prefs
                     final SharedPreferences prefs = context.getSharedPreferences(context.getString(R.string.package_name), context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putString(USER_EMAIL, "");
                     editor.commit();
                     User.getInstance().setEmail(null, context);
+
+                    // Clear cache files
+                    String friendsCacheFileName = getString(R.string.friends_cache);
+                    String eventsCacheFileName = getString(R.string.events_cache);
+                    File file = new File(context.getCacheDir(), friendsCacheFileName);
+                    file.delete();
+                    file = new File(context.getCacheDir(), eventsCacheFileName);
+                    file.delete();
 
                     //Exiting activity and switching to main activity
                     Intent intent = new Intent(getBaseContext(), MainActivity.class);

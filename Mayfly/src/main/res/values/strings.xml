@@ -17,6 +17,7 @@
     <!-- Actions -->
     <string name="action_logout">Log out</string>
     <string name="action_new_event">New Event</string>
+    <string name="action_invite">Invite</string>
 
     <!-- Error Messages -->
     <string name="error_network">Can\'t connect to network</string>
