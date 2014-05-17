@@ -303,7 +303,7 @@ public class NewEventActivity extends Activity {
             }
             else {
                 mNameView.setError(message);
-                    mNameView.requestFocus();
+                mNameView.requestFocus();
             }
         }
 

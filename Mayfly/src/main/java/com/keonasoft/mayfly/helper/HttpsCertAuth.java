@@ -97,13 +97,13 @@ public class HttpsCertAuth {
         } catch (NoSuchAlgorithmException e) {
             throw new MyRuntimeException(e);
         }
-
+        return tmf;
     }
 
     public TrustManagerFactory initTrustManager(){
 
         TrustManagerFactory tmf = getTrustManagerFactory();
-
+        String filename = "tmp"; //TODO change this
         Certificate  ca = loadCAFromInputStream(filename);
         KeyStore     keyStore = createKeystore(ca);
 

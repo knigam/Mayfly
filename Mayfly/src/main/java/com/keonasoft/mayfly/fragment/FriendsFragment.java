@@ -11,19 +11,28 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TabHost;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.keonasoft.mayfly.MyException;
 import com.keonasoft.mayfly.activity.AppActivity;
 import com.keonasoft.mayfly.R;
 import com.keonasoft.mayfly.activity.EventActivity;
+import com.keonasoft.mayfly.helper.HttpHelper;
 import com.keonasoft.mayfly.model.User;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +50,11 @@ public class FriendsFragment extends android.app.Fragment {
     private View rootView;
     private Map<Integer, String> friendMap;
     private Context rootContext;
+
+    //Layout Views
+    private TextView friendSearch;
+    private Button friendSearchBtn;
+    private Button friendAddBtn;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -79,6 +93,22 @@ public class FriendsFragment extends android.app.Fragment {
         tabSpec2.setIndicator("Groups");
         tabHost.addTab(tabSpec2);
 
+        friendSearch = (TextView) rootView.findViewById(R.id.friendSearchTextView);
+        friendSearchBtn = (Button) rootView.findViewById(R.id.friendSearchButton);
+        friendSearchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchFriends();
+            }
+        });
+        friendAddBtn = (Button) rootView.findViewById(R.id.friendAddButton);
+        friendAddBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addFriend();
+            }
+        });
+
         return rootView;
     }
 
@@ -89,7 +119,78 @@ public class FriendsFragment extends android.app.Fragment {
                 getArguments().getInt(ARG_SECTION_NUMBER));
     }
 
-    private void displayFriends(){
+    protected void searchFriends(){
+        //TODO
+    }
+
+    protected void addFriend(){
+        final String FRIEND_EMAIL = friendSearch.getText().toString();
+        final String URI = getString(R.string.conn) + getString(R.string.friends_create);
+        View focusView = null;
+        boolean cancel = false;
+
+        if(TextUtils.isEmpty(FRIEND_EMAIL)){
+            friendSearch.setError(getString(R.string.error_field_required));
+            focusView = friendSearch;
+            cancel = true;
+        }
+
+        if(cancel)
+            focusView.requestFocus();
+        else {
+            new AsyncTask<Void, Void, Boolean>(){
+                String message = getString(R.string.error_network);
+
+                @Override
+                protected Boolean doInBackground(Void... params){
+                    JSONObject result = new JSONObject();
+                    try {
+                        result.put("email", FRIEND_EMAIL);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+                    try {
+                        result = HttpHelper.httpPost(URI, result);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+                    try {
+                        if(result.getBoolean("success")){
+                            try {
+                                User.getInstance().cacheFriends(rootContext);
+                            } catch (MyException e) {
+                                e.printStackTrace();
+                            }
+                            return true;
+                        }
+                        else {
+                            message = result.getString("message");
+                            return false;
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+                }
+                @Override
+                protected void onPostExecute(final Boolean success){
+                    if(success){
+                        friendSearch.setText("");
+                        Toast.makeText(rootContext, FRIEND_EMAIL + "added successfully", Toast.LENGTH_SHORT).show();
+                        displayFriends();
+                    }
+                    else {
+                        friendSearch.setError(message);
+                        friendSearch.requestFocus();
+                    }
+                }
+            }.execute(null, null, null);
+        }
+    }
+
+    protected void displayFriends(){
 
         final ListView FRIENDVIEW = (ListView) rootView.findViewById(R.id.friendListView);
 

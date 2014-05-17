@@ -34,6 +34,7 @@
     <string name="devices_create">/devices/create.json</string>
     <string name="devices_destroy">/devices/destroy.json</string>
     <string name="friends_show">/friends.json</string>
+    <string name="friends_create">/friends/create.json</string>
     <string name="events_create">/events/create.json</string>
     <string name="events_show">/events.json</string>
     <string name="event_show">/event</string>
