@@ -48,11 +48,13 @@ public class LoginActivity extends Activity {
     private String mEmail;
     private String mPassword;
     private String mPasswordConfirmation;
+    private String mName;
 
     // UI references.
     private EditText mEmailView;
     private EditText mPasswordView;
     private EditText mPasswordConfirmationView;
+    private EditText mNameView;
     private View mLoginFormView;
     private View mLoginStatusView;
     private TextView mLoginStatusMessageView;
@@ -72,6 +74,9 @@ public class LoginActivity extends Activity {
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordConfirmationView = (EditText) findViewById(R.id.passwordConfirmation);
+
+        mNameView = (EditText) findViewById(R.id.newUserName);
+
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -82,7 +87,7 @@ public class LoginActivity extends Activity {
                 return false;
             }
         });
-        mPasswordConfirmationView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mNameView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == R.id.create || id == EditorInfo.IME_NULL) {
@@ -113,6 +118,7 @@ public class LoginActivity extends Activity {
                     submitBtn.setText(R.string.action_create_user_short);
                     toggleBtn.setText(R.string.toggle_have_account);
                     mPasswordConfirmationView.setVisibility(view.VISIBLE);
+                    mNameView.setVisibility(view.VISIBLE);
                     mPasswordView.setImeActionLabel("Next", EditorInfo.IME_ACTION_NEXT);
                     signIn = false;
                 }
@@ -120,6 +126,7 @@ public class LoginActivity extends Activity {
                     submitBtn.setText(R.string.action_sign_in_short);
                     toggleBtn.setText(R.string.toggle_need_account);
                     mPasswordConfirmationView.setVisibility(view.INVISIBLE);
+                    mNameView.setVisibility(view.INVISIBLE);
                     mPasswordView.setImeActionLabel(getString(R.string.action_sign_in_short), EditorInfo.IME_NULL);
                     signIn = true;
                 }
@@ -191,9 +198,19 @@ public class LoginActivity extends Activity {
         //mPassword = "1234qwer";
         //*****************************
 
-        // Check for valid Password Confirmation
+        // If registering a new user
         if (!signIn){
             mPasswordConfirmation = mPasswordConfirmationView.getText().toString(); //store value
+            mName = mNameView.getText().toString();
+
+            //Check to see if name field is filled out
+            if (TextUtils.isEmpty(mName)) {
+                mNameView.setError(getString(R.string.error_field_required));
+                focusView = mNameView;
+                cancel = true;
+            }
+
+            //Check for valid password confirmation
             if (TextUtils.isEmpty(mPasswordConfirmation)) {
                 mPasswordConfirmationView.setError(getString(R.string.error_field_required));
                 focusView = mPasswordConfirmationView;
@@ -298,7 +315,7 @@ public class LoginActivity extends Activity {
             Map<String, String> map = new HashMap<String, String>();
             map.put("email", mEmail);
             map.put("password", mPassword);
-            map.put("remember", "true");
+            map.put("name", mName);
 
             //Determines where to POST to and if confirmation is needed
             if(signIn){
