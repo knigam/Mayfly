@@ -112,13 +112,6 @@ public class FriendsFragment extends android.app.Fragment {
         return rootView;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        ((AppActivity) activity).onSectionAttached(
-                getArguments().getInt(ARG_SECTION_NUMBER));
-    }
-
     protected void searchFriends(){
         //TODO
     }

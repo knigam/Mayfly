@@ -101,13 +101,11 @@ public class MainActivity extends Activity {
                 }
                 @Override
                 protected void onPostExecute(Boolean success){
-                    if(success){
-                        Intent intent = new Intent(MainActivity.this, AppActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                    else
+                    if(!success)
                         Toast.makeText(MainActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, AppActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
             }.execute(null, null, null);
         }

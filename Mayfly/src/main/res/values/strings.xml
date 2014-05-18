@@ -5,13 +5,7 @@
     <string name="app_name">Mayfly</string>
     <string name="action_settings">Settings</string>
     <string name="app_id">194878360718768</string>
-    <string name="title_activity_app">AppActivity</string>
-    <string name="title_section1">Notifications</string>
-    <string name="title_section2">My Events</string>
-    <string name="title_section3">Attending Events</string>
-    <string name="title_section4">Friends</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <string name="please_wait_progress">Please wait…</string>
 
     <!-- Actions -->
@@ -44,7 +38,14 @@
     <!-- Cache Files -->
     <string name="friends_cache">mayfly_friends_cache</string>
     <string name="events_cache">mayfly_events_cache</string>
-    <string name="title_activity_invite">InviteActivity</string>
-    <string name="hello_world">Hello world!</string>
 
+
+    <!-- Titles -->
+    <string name="title_activity_invite">Invite Friends</string>
+    <string name="title_activity_new_event">New Event</string>
+    <string name="title_activity_event">Event Details</string>
+    <string name="title_section1">Notifications</string>
+    <string name="title_section2">My Events</string>
+    <string name="title_section3">Attending Events</string>
+    <string name="title_section4">Friends</string>
 </resources>

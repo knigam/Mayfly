@@ -64,13 +64,6 @@ public class EventsFragment extends android.app.Fragment {
         return rootView;
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        ((AppActivity) activity).onSectionAttached(
-                getArguments().getInt(ARG_SECTION_NUMBER));
-    }
-
     public void displayEvents(final boolean ATTENDING, final boolean CREATOR){
 
         final ListView LISTVIEW = (ListView) rootView.findViewById(R.id.section_List);
