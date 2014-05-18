@@ -1,7 +1,6 @@
 package com.keonasoft.mayfly.activity;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -14,7 +13,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -22,7 +20,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.Session;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.keonasoft.mayfly.MyException;
 import com.keonasoft.mayfly.R;
@@ -377,9 +374,13 @@ public class AppActivity extends ActionBarActivity
             return true;
         }
         if (id == R.id.action_logout){
-            Session session = Session.getActiveSession();
+            //Session session = Session.getActiveSession();
             deleteRegistrationIDFromBackend(regid);
             signUserOut();
+        }
+        if (id == R.id.action_friends) {
+            Intent intent = new Intent(AppActivity.this, FriendsActivity.class);
+            startActivity(intent);
         }
         if (id == R.id.action_new_event){
             createNewEvent();

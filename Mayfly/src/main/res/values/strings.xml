@@ -12,6 +12,7 @@
     <string name="action_logout">Log out</string>
     <string name="action_new_event">New Event</string>
     <string name="action_invite">Invite</string>
+    <string name="action_friends">Friends</string>
 
     <!-- Error Messages -->
     <string name="error_network">Can\'t connect to network</string>
@@ -44,6 +45,7 @@
     <string name="title_activity_invite">Invite Friends</string>
     <string name="title_activity_new_event">New Event</string>
     <string name="title_activity_event">Event Details</string>
+    <string name="title_activity_friends">Friends</string>
     <string name="title_section1">Notifications</string>
     <string name="title_section2">My Events</string>
     <string name="title_section3">Attending Events</string>

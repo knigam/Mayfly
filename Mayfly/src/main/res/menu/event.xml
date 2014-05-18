@@ -4,6 +4,5 @@
     tools:context="com.keonasoft.mayfly.activity.EventActivity" >
     <item android:id="@+id/action_invite"
         android:title="@string/action_invite"
-        android:orderInCategory="100"
-        app:showAsAction="withText|ifRoom" />
+        app:showAsAction="withText|ifRoom"/>
 </menu>
