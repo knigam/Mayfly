@@ -2,7 +2,6 @@ package com.keonasoft.mayfly.activity;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
@@ -13,24 +12,21 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.Session;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.keonasoft.mayfly.MyException;
+import com.keonasoft.mayfly.R;
 import com.keonasoft.mayfly.fragment.AttendingEventsFragment;
 import com.keonasoft.mayfly.fragment.EventsFragment;
 import com.keonasoft.mayfly.fragment.FriendsFragment;
-import com.keonasoft.mayfly.helper.HttpHelper;
 import com.keonasoft.mayfly.fragment.MyEventsFragment;
 import com.keonasoft.mayfly.fragment.NavigationDrawerFragment;
-import com.keonasoft.mayfly.R;
+import com.keonasoft.mayfly.helper.HttpHelper;
 import com.keonasoft.mayfly.model.User;
 
 import org.json.JSONException;
@@ -38,7 +34,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.spec.ECField;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -81,8 +76,6 @@ public class AppActivity extends Activity
             registerInBackground();
         }
         setContentView(R.layout.activity_app);
-        
-        recacheEvents();
         
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);

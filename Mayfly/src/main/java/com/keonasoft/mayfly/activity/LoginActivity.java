@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,9 +19,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.keonasoft.mayfly.MyException;
-import com.keonasoft.mayfly.helper.HttpHelper;
 import com.keonasoft.mayfly.R;
+import com.keonasoft.mayfly.helper.HttpHelper;
 import com.keonasoft.mayfly.model.User;
 
 import org.json.JSONException;
@@ -362,6 +362,8 @@ public class LoginActivity extends Activity {
             showProgress(false);
 
             if (success) {
+                Intent intent = new Intent(LoginActivity.this, AppActivity.class);
+                startActivity(intent);
                 finish();
             } else {
                 try {
