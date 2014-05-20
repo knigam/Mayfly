@@ -16,6 +16,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.keonasoft.mayfly.MyException;
 import com.keonasoft.mayfly.R;
 import com.keonasoft.mayfly.helper.HttpHelper;
+import com.keonasoft.mayfly.helper.HttpsCertAuth;
 import com.keonasoft.mayfly.model.User;
 
 public class MainActivity extends Activity {
@@ -37,7 +38,9 @@ public class MainActivity extends Activity {
         title.setTypeface(tf);
 
         context = getApplicationContext();
-        HttpHelper.ourInstance.initialize(getApplicationContext()); //initialize singalton httphelper object
+
+//        HttpsCertAuth.getInstance().initTrustManager();
+        HttpHelper.getInstance().initialize(getApplicationContext()); //initialize singalton httphelper object
 
         // Check device for Play Services APK.
         if (checkPlayServices()) {

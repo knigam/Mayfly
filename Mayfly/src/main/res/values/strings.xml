@@ -13,6 +13,8 @@
     <string name="action_new_event">New Event</string>
     <string name="action_invite">Invite</string>
     <string name="action_friends">Friends</string>
+    <string name="action_rename">Rename</string>
+    <string name="action_delete">Delete</string>
 
     <!-- Error Messages -->
     <string name="error_network">Can\'t connect to network</string>
@@ -30,9 +32,11 @@
     <string name="devices_destroy">/devices/destroy.json</string>
     <string name="friends_show">/friends.json</string>
     <string name="friends_create">/friends/create.json</string>
+    <string name="friends_destroy">/friends/destroy.json</string>
     <string name="events_create">/events/create.json</string>
     <string name="events_show">/events.json</string>
     <string name="event_show">/event</string>
+    <string name="event_destroy">/events/destroy.json</string>
     <string name="invite_update">/invites/update.json</string>
     <string name="invite_create">/invites/create.json</string>
 

@@ -15,9 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.keonasoft.mayfly.MyException;
 import com.keonasoft.mayfly.R;
 import com.keonasoft.mayfly.helper.HttpHelper;
 import com.keonasoft.mayfly.model.Event;
+import com.keonasoft.mayfly.model.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -141,17 +143,15 @@ public class EventActivity extends Activity {
                     return false;
                 }
                 try {
-                    String success = result.getString("success");
-                    if(success.equals("true")){
+                    if(result.getBoolean("success")){
                         return true;
                     }
-                    else if (success.equals("false")){
+                    else {
                         return false;
                     }
                 } catch (JSONException e) {
                     return false;
                 }
-                return false;
             }
             @Override
             protected void onPostExecute(final Boolean success){
@@ -167,6 +167,61 @@ public class EventActivity extends Activity {
         }.execute(null, null, null);
     }
 
+    /**
+     * Deletes the current event
+     */
+    public void deleteEvent(){
+        final String URI = getString(R.string.conn) + getString(R.string.event_destroy);
+        if(!mEvent.getCreator()){
+            Toast.makeText(EventActivity.this, "Only the owner of the event can do that", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        new AsyncTask<Void, Void, Boolean>(){
+            String message = getString(R.string.error_network);
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                JSONObject result = new JSONObject();
+
+                try {
+                    result.put("event_id", mEvent.getId());
+                } catch (JSONException e) {
+                    return false;
+                }
+
+                try {
+                    result = HttpHelper.httpPost(URI, result);
+                } catch (Exception e) {
+                    return false;
+                }
+                try {
+                    if(result.getBoolean("success")){
+                        try {
+                            User.getInstance().cacheEvents(EventActivity.this);
+                        } catch (MyException e) {
+                            e.printStackTrace();
+                        }
+                        return true;
+                    }
+                    else {
+                        message = result.getString("message");
+                        return false;
+                    }
+                } catch (JSONException e) {
+                    return false;
+                }
+            }
+            @Override
+            protected void onPostExecute(final Boolean success){
+                if(success){
+                    finish();
+                }
+                else {
+                    Toast.makeText(EventActivity.this, message, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }.execute(null, null, null);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -187,6 +242,10 @@ public class EventActivity extends Activity {
             intent.putExtra("eventId", mEvent.getId());
             intent.putExtra("newEvent", false);
             startActivity(intent);
+            return true;
+        }
+        if (id == R.id.action_delete){
+            deleteEvent();
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -27,7 +27,15 @@ import javax.net.ssl.TrustManagerFactory;
  */
 public class HttpsCertAuth {
 
+    private static HttpsCertAuth ourInstance = new HttpsCertAuth();
+    private TrustManagerFactory tmf;
 
+    private HttpsCertAuth(){
+    }
+
+    public static HttpsCertAuth getInstance() {
+        return ourInstance;
+    }
 
     private Certificate loadCAFromInputStream(String filename){
         CertificateFactory cf = null;
@@ -102,7 +110,7 @@ public class HttpsCertAuth {
 
     public TrustManagerFactory initTrustManager(){
 
-        TrustManagerFactory tmf = getTrustManagerFactory();
+        tmf = getTrustManagerFactory();
         String filename = "tmp"; //TODO change this
         Certificate  ca = loadCAFromInputStream(filename);
         KeyStore     keyStore = createKeystore(ca);
@@ -117,7 +125,7 @@ public class HttpsCertAuth {
 
     }
 
-    private HttpsURLConnection getHttpsURLConnection(URL url){
+    public HttpsURLConnection getHttpsURLConnection(URL url){
 
 
         // Create an SSLContext that uses our TrustManager

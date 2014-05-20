@@ -6,6 +6,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -32,6 +35,9 @@ public class FriendsActivity extends ActionBarActivity {
 
     private Map<Integer, String> friendMap;
 
+    List<String> friendNames;
+    List<Integer> friendIds;
+
     //Layout Views
     private TextView friendSearch;
     private Button friendSearchBtn;
@@ -41,6 +47,9 @@ public class FriendsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friends);
+
+        friendNames = new ArrayList<String>();
+        friendIds = new ArrayList<Integer>();
 
         displayFriends();
 
@@ -59,6 +68,31 @@ public class FriendsActivity extends ActionBarActivity {
                 addFriend();
             }
         });
+    }
+
+    @Override
+    public void onCreateContextMenu(final ContextMenu menu, final View v, final ContextMenu.ContextMenuInfo menuInfo){
+        super.onCreateContextMenu(menu, v, menuInfo);
+        if (v.getId()==R.id.friendListView) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.friends, menu);
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch(item.getItemId()) {
+//            case R.id.renameFriend:
+//                renameFriend(friendIds.get(info.position));
+//                return true;
+            case R.id.action_delete:
+                System.out.println(friendIds.size());
+                deleteFriend(friendIds.get(info.position));
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 
     protected void searchFriends(){
@@ -132,6 +166,57 @@ public class FriendsActivity extends ActionBarActivity {
         }
     }
 
+    protected void deleteFriend(final int friendId){
+        final String URI = getString(R.string.conn) + getString(R.string.friends_destroy);
+
+        new AsyncTask<Void, Void, Boolean>(){
+            String message = getString(R.string.error_network);
+
+            @Override
+            protected Boolean doInBackground(Void... params){
+                JSONObject result = new JSONObject();
+                try {
+                    result.put("id", friendId);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+                try {
+                    result = HttpHelper.httpPost(URI, result);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+                try {
+                    if(result.getBoolean("success")){
+                        try {
+                            User.getInstance().cacheFriends(getApplicationContext());
+                        } catch (MyException e) {
+                            e.printStackTrace();
+                        }
+                        return true;
+                    }
+                    else {
+                        message = result.getString("message");
+                        return false;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+            @Override
+            protected void onPostExecute(final Boolean success){
+                if(success){
+                    displayFriends();
+                }
+                else {
+                    Toast.makeText(FriendsActivity.this, message, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }.execute(null, null, null);
+    }
+
     protected void displayFriends(){
 
         final ListView FRIENDVIEW = (ListView) findViewById(R.id.friendListView);
@@ -148,8 +233,8 @@ public class FriendsActivity extends ActionBarActivity {
 
             @Override
             protected void onPostExecute(Boolean success) {
-                List<String> friendNames = new ArrayList<String>();
-                List<Integer> friendIds = new ArrayList<Integer>();
+                friendNames = new ArrayList<String>();
+                friendIds = new ArrayList<Integer>();
 
                 for (Integer key: friendMap.keySet()){
                     friendNames.add(friendMap.get(key));
@@ -160,6 +245,7 @@ public class FriendsActivity extends ActionBarActivity {
                 dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 FRIENDVIEW.setAdapter(dataAdapter);
 
+                registerForContextMenu(FRIENDVIEW);
                 FRIENDVIEW.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

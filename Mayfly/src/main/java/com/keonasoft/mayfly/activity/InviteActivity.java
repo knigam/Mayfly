@@ -99,7 +99,7 @@ public class InviteActivity extends Activity {
             return;
         }
         final JSONArray USERS = users;
-        
+
         new AsyncTask<Void,Void, Boolean>(){
 
             @Override

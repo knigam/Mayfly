@@ -25,11 +25,14 @@ import java.util.Map;
  */
 public class HttpHelper {
 
-    public static HttpHelper ourInstance = new HttpHelper();
+    private static HttpHelper ourInstance = new HttpHelper();
+    public static HttpHelper getInstance() { return ourInstance; }
 
     private static PersistentCookieStore mCookie;
     private static DefaultHttpClient mHttpClient;
     private static boolean initialized = false;
+    private HttpHelper(){
+    }
 
     /**
      * This method sets up ourInstance for use. Initialize must be run at least once before any other
@@ -81,12 +84,12 @@ public class HttpHelper {
      * @return
      */
     public static JSONObject httpPost(String uri, JSONObject json) throws Exception{
-            DefaultHttpClient httpclient = getHttpClient();
+            DefaultHttpClient httpClient = getHttpClient();
             HttpPost httpPost = new HttpPost(uri);
             httpPost.setEntity(new StringEntity(json.toString()));
             httpPost.setHeader("Accept", "application/json");
             httpPost.setHeader("Content-type", "application/json");
-            return httpToJson(httpclient.execute(httpPost));
+            return httpToJson(httpClient.execute(httpPost));
     }
 
     /**
