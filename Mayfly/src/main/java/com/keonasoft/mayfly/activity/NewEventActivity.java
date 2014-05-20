@@ -289,6 +289,7 @@ public class NewEventActivity extends Activity {
             if(success){
                 Intent intent = new Intent(NewEventActivity.this, InviteActivity.class);
                 intent.putExtra("eventId", mEvent.getId());
+                intent.putExtra("newEvent", true);
                 startActivity(intent);
                 finish();
             }

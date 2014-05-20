@@ -32,6 +32,7 @@ public class InviteActivity extends Activity {
     Context context;
     private Map<Integer, String> friendMap;
     private int eventId;
+    private boolean newEvent;
     List<String> friendNames;
     List<Integer> friendIds;
 
@@ -40,6 +41,7 @@ public class InviteActivity extends Activity {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         eventId = intent.getIntExtra("eventId", -1);
+        newEvent = intent.getBooleanExtra("newEvent", false);
         context = getApplicationContext();
 
         setContentView(R.layout.activity_invite);
@@ -92,7 +94,12 @@ public class InviteActivity extends Activity {
                 }
             }
         }
+        if (users.length() == 0) {
+            finish();
+            return;
+        }
         final JSONArray USERS = users;
+        
         new AsyncTask<Void,Void, Boolean>(){
 
             @Override
@@ -124,9 +131,11 @@ public class InviteActivity extends Activity {
             @Override
             protected void onPostExecute(Boolean success){
                 if(success){
-                    Intent intent = new Intent(InviteActivity.this, EventActivity.class);
-                    intent.putExtra("eventId", eventId);
-                    startActivity(intent);
+                    if(newEvent) {
+                        Intent intent = new Intent(InviteActivity.this, EventActivity.class);
+                        intent.putExtra("eventId", eventId);
+                        startActivity(intent);
+                    }
                     finish();
                 }
                 else{

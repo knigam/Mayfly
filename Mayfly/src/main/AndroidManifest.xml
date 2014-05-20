@@ -48,15 +48,27 @@
         </activity>
         <activity
             android:name="com.keonasoft.mayfly.activity.EventActivity"
-            android:label="@string/title_activity_event" >
+            android:label="@string/title_activity_event"
+            android:parentActivityName="com.keonasoft.mayfly.activity.AppActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="AppActivity" />
         </activity>
         <activity
             android:name="com.keonasoft.mayfly.activity.NewEventActivity"
-            android:label="@string/title_activity_new_event" >
+            android:label="@string/title_activity_new_event"
+            android:parentActivityName="com.keonasoft.mayfly.activity.AppActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="AppActivity" />
         </activity>
         <activity
             android:name="com.keonasoft.mayfly.activity.FriendsActivity"
-            android:label="@string/title_activity_friends" >
+            android:label="@string/title_activity_friends"
+            android:parentActivityName="com.keonasoft.mayfly.activity.AppActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="AppActivity" />
         </activity>
         <uses-permission android:name="android.permission.INTERNET" />
 
@@ -74,11 +86,7 @@
         </activity>
         <activity
             android:name="com.keonasoft.mayfly.activity.InviteActivity"
-            android:label="@string/title_activity_invite"
-            android:parentActivityName="com.keonasoft.mayfly.activity.AppActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="AppActivity" />
+            android:label="@string/title_activity_invite" >
         </activity>
     </application>
 

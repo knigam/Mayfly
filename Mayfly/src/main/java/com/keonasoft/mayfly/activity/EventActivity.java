@@ -185,8 +185,8 @@ public class EventActivity extends Activity {
         if (id == R.id.action_invite) {
             Intent intent = new Intent(EventActivity.this, InviteActivity.class);
             intent.putExtra("eventId", mEvent.getId());
+            intent.putExtra("newEvent", false);
             startActivity(intent);
-            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
