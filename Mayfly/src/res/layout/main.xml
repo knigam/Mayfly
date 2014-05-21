@@ -1,0 +1,64 @@
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:weightSum="1"
+    android:background="@drawable/gradient_bg">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.40" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/mayfly_logo_plain"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Mayfly"
+            android:textColor="#FFFFFF"
+            android:id="@+id/mainTitleTextView"
+            android:textSize="80dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_marginLeft="-20dp" />
+    </LinearLayout>
+
+    <!--<Button-->
+        <!--android:layout_width="318dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Sign In"-->
+        <!--android:id="@+id/logInBtn"-->
+        <!--android:onClick="logInOnClick"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:textSize="30dp"/>-->
+
+    <!--<TextView-->
+        <!--android:layout_width="169dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+        <!--android:text="\-\- or \-\-"-->
+        <!--android:textSize="20dp"-->
+        <!--android:id="@+id/textView"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:gravity="center_vertical|center_horizontal" />-->
+
+    <!--<com.facebook.widget.LoginButton-->
+        <!--android:id="@+id/authButton"-->
+        <!--android:layout_width="318dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center_horizontal" />-->
+    </LinearLayout>

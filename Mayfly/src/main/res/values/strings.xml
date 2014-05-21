@@ -54,4 +54,16 @@
     <string name="title_section2">My Events</string>
     <string name="title_section3">Attending Events</string>
     <string name="title_section4">Friends</string>
+
+    <!-- Colors -->
+    <string name="color_navy">#1E3F64</string>
+    <string name="yellow_green">#6A803E</string>
+    <string name="color_bright_yellow">#C4C21E</string>
+    <string name="color_turquoise">#218485</string>
+    <string name="color_heather_grey">#545354</string>
+    <string name="color_pale_orange">#C78C41</string>
+    <string name="color_seafoam">#5EA897</string>
+    <string name="color_grey">#6E8A87</string>
+    <string name="color_crayon_pink">#BC4969</string>
+
 </resources>
