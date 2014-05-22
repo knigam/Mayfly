@@ -21,7 +21,8 @@ public class Event {
     private int id;
     private String name;
     private String description;
-    private String time;
+    private String startTime;
+    private String endTime;
     private String location;
     private Integer min;
     private Integer max;
@@ -35,12 +36,13 @@ public class Event {
         this.id = id;
     }
 
-    public Event(int id, String name, String description, String time, String location, Integer min, Integer max,
+    public Event(int id, String name, String description, String startTime, String entTime, String location, Integer min, Integer max,
                  Boolean attending, Boolean creator){
         this.id = id;
         this.name = name;
         this.description = description;
-        this.time = time;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.location = location;
         this.min = min;
         this.max = max;
@@ -59,7 +61,8 @@ public class Event {
         try {
             name = result.getString("name");
             description = result.getString("description");
-            time = result.getString("time");
+            startTime = result.getString("start_time");
+            endTime = result.getString("end_time");
             location = result.getString("location");
             min = result.getInt("min");
             max = result.getInt("max");
@@ -107,12 +110,12 @@ public class Event {
         this.description = description;
     }
 
-    public String getTime() {
-        return time;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setStartTime(String time) {
+        this.startTime = time;
     }
 
     public String getLocation() {
@@ -163,13 +166,22 @@ public class Event {
         this.usersAttending = usersAttending;
     }
 
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
     @Override
     public String toString() {
         return "Event{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", time='" + time + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
                 ", location='" + location + '\'' +
                 ", min=" + min +
                 ", max=" + max +

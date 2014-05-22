@@ -167,7 +167,7 @@ public class AppActivity extends ActionBarActivity
             deleteRegistrationIDFromBackend(registrationId);
             return "";
         }
-/*        new AsyncTask<Void, Void, Boolean>(){
+        new AsyncTask<Void, Void, Boolean>(){
             @Override
             protected Boolean doInBackground(Void... params){
                 boolean success = sendRegistrationIdToBackend(registrationId);
@@ -178,7 +178,7 @@ public class AppActivity extends ActionBarActivity
                     signUserOut();
                 }
             }
-        }.execute(null, null, null);*/
+        }.execute(null, null, null);
         return registrationId;
     }
 

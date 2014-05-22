@@ -55,7 +55,7 @@ public class EventActivity extends Activity {
                     setContentView(R.layout.activity_event);
                     TextView name = (TextView) findViewById(R.id.eventNameTextView);
                     TextView description = (TextView) findViewById(R.id.eventDescriptionTextView);
-                    TextView time = (TextView) findViewById(R.id.eventTimeTextView);
+                    TextView startTime = (TextView) findViewById(R.id.eventTimeTextView);
                     TextView location = (TextView) findViewById(R.id.eventLocationTextView);
                     LinearLayout minMaxLayout = (LinearLayout) findViewById(R.id.minMaxLayout);
                     ToggleButton eventAttendingToggleButton = (ToggleButton) findViewById(R.id.eventAttendingToggleButton);
@@ -63,7 +63,7 @@ public class EventActivity extends Activity {
 
                     name.setText(mEvent.getName());
                     description.setText(mEvent.getDescription());
-                    time.setText(mEvent.getTime());
+                    startTime.setText(mEvent.getStartTime());
                     location.setText(mEvent.getLocation());
 
                     //Determine if the min and max fields are applicable

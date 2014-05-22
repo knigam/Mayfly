@@ -116,7 +116,7 @@ public class NewEventActivity extends Activity {
         mEvent.setName(mNameView.getText().toString());
         mEvent.setDescription(mDescriptionView.getText().toString());
         mEvent.setLocation(mLocationView.getText().toString());
-        mEvent.setTime(mTimeView.getCurrentHour() + ":" + mTimeView.getCurrentMinute());
+        mEvent.setStartTime(mTimeView.getCurrentHour() + ":" + mTimeView.getCurrentMinute());
 
         //Check to make sure description is less than 255 chars
         if (!TextUtils.isEmpty(mEvent.getDescription()) && mEvent.getDescription().length() > 255) {
@@ -245,7 +245,7 @@ public class NewEventActivity extends Activity {
             try {
                 json.put("name", mEvent.getName());
                 json.put("location", mEvent.getLocation());
-                json.put("time", mEvent.getTime());
+                json.put("start_time", mEvent.getStartTime());
                 json.put("min", mEvent.getMin());
                 json.put("max", mEvent.getMax());
                 json.put("description", mEvent.getDescription());
