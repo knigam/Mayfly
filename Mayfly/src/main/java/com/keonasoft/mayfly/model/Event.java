@@ -36,7 +36,7 @@ public class Event {
         this.id = id;
     }
 
-    public Event(int id, String name, String description, String startTime, String entTime, String location, Integer min, Integer max,
+    public Event(int id, String name, String description, String startTime, String endTime, String location, Integer min, Integer max,
                  Boolean attending, Boolean creator){
         this.id = id;
         this.name = name;

@@ -67,6 +67,12 @@ public class EventsFragment extends android.app.Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        displayEvents(ATTENDING, CREATOR);
+    }
+
     public void displayEvents(final boolean ATTENDING, final boolean CREATOR){
 
         final ListView LISTVIEW = (ListView) rootView.findViewById(R.id.section_List);

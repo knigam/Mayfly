@@ -40,6 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/newEventNameEditText"
+                android:capitalize="words"
                 android:hint="Name"
                 android:singleLine="true" />
 
@@ -47,26 +48,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/newEventLocationEditText"
+                android:capitalize="sentences"
                 android:singleLine="true"
                 android:hint="Location" />
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <TimePicker
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleY="0.7"
+                android:scaleX="0.7"
+                android:id="@+id/newEventStartTimePicker"
+                android:layout_gravity="center" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20dp"
-                    android:layout_gravity="center_horizontal"
-                    android:text="Time: " />
+            <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:layout_gravity="center"
+            android:text=" to " />
 
-                <TimePicker
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/newEventTimePicker"/>
-            </LinearLayout>
+            <TimePicker
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleY="0.7"
+                android:scaleX="0.7"
+                android:id="@+id/newEventEndTimePicker"
+                android:layout_gravity="center" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -105,6 +112,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/newEventDescriptionEditText"
                 android:layout_gravity="center_horizontal"
+                android:capitalize="sentences"
                 android:hint="Description" />
 
             <Button

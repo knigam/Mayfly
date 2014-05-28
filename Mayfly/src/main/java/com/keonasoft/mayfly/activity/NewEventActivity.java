@@ -34,7 +34,8 @@ public class NewEventActivity extends Activity {
     //UI References
     private EditText mNameView;
     private EditText mDescriptionView;
-    private TimePicker mTimeView;
+    private TimePicker mStartTimeView;
+    private TimePicker mEndTimeView;
     private EditText mLocationView;
     private EditText mMinView;
     private EditText mMaxView;
@@ -50,7 +51,8 @@ public class NewEventActivity extends Activity {
         mEvent = new Event();
         mNameView = (EditText) findViewById(R.id.newEventNameEditText);
         mDescriptionView = (EditText) findViewById(R.id.newEventDescriptionEditText);
-        mTimeView = (TimePicker) findViewById(R.id.newEventTimePicker);
+        mStartTimeView = (TimePicker) findViewById(R.id.newEventStartTimePicker);
+        mEndTimeView = (TimePicker) findViewById(R.id.newEventEndTimePicker);
         mLocationView = (EditText) findViewById(R.id.newEventLocationEditText);
         mMinView = (EditText) findViewById(R.id.newEventMinEditText);
         mMaxView = (EditText) findViewById(R.id.newEventMaxEditText);
@@ -116,7 +118,8 @@ public class NewEventActivity extends Activity {
         mEvent.setName(mNameView.getText().toString());
         mEvent.setDescription(mDescriptionView.getText().toString());
         mEvent.setLocation(mLocationView.getText().toString());
-        mEvent.setStartTime(mTimeView.getCurrentHour() + ":" + mTimeView.getCurrentMinute());
+        mEvent.setStartTime(mStartTimeView.getCurrentHour() + ":" + mStartTimeView.getCurrentMinute());
+        mEvent.setEndTime(mEndTimeView.getCurrentHour() + ":" + mEndTimeView.getCurrentMinute());
 
         //Check to make sure description is less than 255 chars
         if (!TextUtils.isEmpty(mEvent.getDescription()) && mEvent.getDescription().length() > 255) {
@@ -246,6 +249,7 @@ public class NewEventActivity extends Activity {
                 json.put("name", mEvent.getName());
                 json.put("location", mEvent.getLocation());
                 json.put("start_time", mEvent.getStartTime());
+                json.put("end_time", mEvent.getEndTime());
                 json.put("min", mEvent.getMin());
                 json.put("max", mEvent.getMax());
                 json.put("description", mEvent.getDescription());

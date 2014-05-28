@@ -44,4 +44,10 @@ public class MyEventsFragment extends EventsFragment {
 
         return rootView;
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        displayEvents(ATTENDING, CREATOR);
+    }
 }
