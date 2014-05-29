@@ -44,7 +44,7 @@ public class EventActivity extends Activity {
             @Override
             protected Boolean doInBackground(Void... params) {
                 mEvent = mEvent.getEvent(URI);
-                if(mEvent == null)
+                if(mEvent == null || !mEvent.getActive())
                     return false;
                 else
                     return true;
@@ -112,7 +112,10 @@ public class EventActivity extends Activity {
 //                    });
                 }
                 else {
-                    Toast.makeText(EventActivity.this, "Can't connect to network", Toast.LENGTH_SHORT).show();
+                    if(mEvent == null)
+                        Toast.makeText(EventActivity.this, "Can't connect to network", Toast.LENGTH_SHORT).show();
+                    else if (!mEvent.getActive())
+                        Toast.makeText(EventActivity.this, "This event has already finished", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }
@@ -230,6 +233,21 @@ public class EventActivity extends Activity {
         }.execute(null, null, null);
     }
 
+    /**
+     * Checks to see if current user has permission to invite.
+     * If user has permission, start the invite activity
+     */
+    public void inviteUsers(){
+        if(mEvent.getCreator() || mEvent.getOpen()){
+            Intent intent = new Intent(EventActivity.this, InviteActivity.class);
+            intent.putExtra("eventId", mEvent.getId());
+            intent.putExtra("newEvent", false);
+            startActivity(intent);
+        }
+        else
+            Toast.makeText(EventActivity.this, "You don\'t have permission to do that", Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         
@@ -245,10 +263,7 @@ public class EventActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_invite) {
-            Intent intent = new Intent(EventActivity.this, InviteActivity.class);
-            intent.putExtra("eventId", mEvent.getId());
-            intent.putExtra("newEvent", false);
-            startActivity(intent);
+            inviteUsers();
             return true;
         }
         if (id == R.id.action_delete){

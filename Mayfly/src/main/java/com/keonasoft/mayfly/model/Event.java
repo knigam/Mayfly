@@ -28,6 +28,8 @@ public class Event {
     private Integer max;
     private Boolean attending;
     private Boolean creator;
+    private Boolean open;
+    private Boolean active;
     private Map<Integer, String> usersAttending;
 
     public Event() {}
@@ -37,7 +39,7 @@ public class Event {
     }
 
     public Event(int id, String name, String description, String startTime, String endTime, String location, Integer min, Integer max,
-                 Boolean attending, Boolean creator){
+                 Boolean attending, Boolean creator, Boolean open, Boolean active){
         this.id = id;
         this.name = name;
         this.description = description;
@@ -48,6 +50,8 @@ public class Event {
         this.max = max;
         this.attending = attending;
         this.creator = creator;
+        this.open = open;
+        this.active = active;
     }
 
     public Event getEvent(final String URI){
@@ -68,6 +72,8 @@ public class Event {
             max = result.getInt("max");
             attending = result.getBoolean("attending");
             creator = result.getBoolean("creator");
+            open = result.getBoolean("open");
+            active = result.getBoolean("active");
 
             //Get the list of users attending
             JSONArray users = result.getJSONArray("users_attending");
@@ -174,6 +180,22 @@ public class Event {
         this.endTime = endTime;
     }
 
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public Boolean getOpen() {
+        return open;
+    }
+
+    public void setOpen(Boolean open) {
+        this.open = open;
+    }
+
     @Override
     public String toString() {
         return "Event{" +
@@ -187,6 +209,8 @@ public class Event {
                 ", max=" + max +
                 ", attending=" + attending +
                 ", creator=" + creator +
+                ", open=" + open +
+                ", active=" + active +
                 ", usersAttending=" + usersAttending +
                 '}';
     }

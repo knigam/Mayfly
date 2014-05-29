@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.ToggleButton;
 
 import com.keonasoft.mayfly.MyException;
 import com.keonasoft.mayfly.R;
@@ -40,6 +41,7 @@ public class NewEventActivity extends Activity {
     private EditText mMinView;
     private EditText mMaxView;
     private Button submitBtn;
+    private ToggleButton openBtn;
 
     private View mCreateEventView;
     private View mCreateEventStatusView;
@@ -57,6 +59,7 @@ public class NewEventActivity extends Activity {
         mMinView = (EditText) findViewById(R.id.newEventMinEditText);
         mMaxView = (EditText) findViewById(R.id.newEventMaxEditText);
         submitBtn = (Button) findViewById(R.id.newEventSubmitButton);
+        openBtn = (ToggleButton) findViewById(R.id.newEventOpenToggleButton);
 
         mCreateEventView = findViewById(R.id.create_event_scroll_view);
         mCreateEventStatusView = findViewById(R.id.create_event_status);
@@ -118,6 +121,7 @@ public class NewEventActivity extends Activity {
         mEvent.setName(mNameView.getText().toString());
         mEvent.setDescription(mDescriptionView.getText().toString());
         mEvent.setLocation(mLocationView.getText().toString());
+        mEvent.setOpen(openBtn.isChecked());
         mEvent.setStartTime(mStartTimeView.getCurrentHour() + ":" + mStartTimeView.getCurrentMinute());
         mEvent.setEndTime(mEndTimeView.getCurrentHour() + ":" + mEndTimeView.getCurrentMinute());
 
@@ -253,6 +257,7 @@ public class NewEventActivity extends Activity {
                 json.put("min", mEvent.getMin());
                 json.put("max", mEvent.getMax());
                 json.put("description", mEvent.getDescription());
+                json.put("open", mEvent.getOpen());
             } catch (JSONException e) {
                 e.printStackTrace();
                 return false;

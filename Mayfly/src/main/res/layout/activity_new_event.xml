@@ -36,13 +36,29 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
 
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/newEventNameEditText"
-                android:capitalize="words"
-                android:hint="Name"
-                android:singleLine="true" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/newEventNameEditText"
+                    android:capitalize="words"
+                    android:hint="Name"
+                    android:singleLine="true"
+                    android:layout_weight="1" />
+
+                <ToggleButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="New ToggleButton"
+                    android:id="@+id/newEventOpenToggleButton"
+                    android:textOn="Open"
+                    android:textOff="Closed"
+                    android:checked="false" />
+            </LinearLayout>
 
             <EditText
                 android:layout_width="match_parent"
@@ -121,6 +137,7 @@
                 android:text="Submit"
                 android:id="@+id/newEventSubmitButton"
                 android:layout_gravity="center_horizontal" />
+
         </LinearLayout>
     </ScrollView>
 
