@@ -1,15 +1,25 @@
 package com.keonasoft.mayfly.helper;
 
-import com.keonasoft.mayfly.MyException;
+import android.content.Context;
+
 import com.keonasoft.mayfly.MyRuntimeException;
+import com.loopj.android.http.MySSLSocketFactory;
+
+import org.apache.http.HttpVersion;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.HTTP;
 
 import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -18,8 +28,6 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
 /**
@@ -28,7 +36,7 @@ import javax.net.ssl.TrustManagerFactory;
 public class HttpsCertAuth {
 
     private static HttpsCertAuth ourInstance = new HttpsCertAuth();
-    private TrustManagerFactory tmf;
+    private KeyStore keyStore;
 
     private HttpsCertAuth(){
     }
@@ -37,18 +45,11 @@ public class HttpsCertAuth {
         return ourInstance;
     }
 
-    private Certificate loadCAFromInputStream(String filename){
+    private Certificate loadCAFromInputStream(InputStream caInput){
         CertificateFactory cf = null;
         try {
             cf = CertificateFactory.getInstance("X.509");
         } catch (CertificateException e) {
-            throw new MyRuntimeException(e);
-        }
-
-        InputStream caInput = null;
-        try {
-            caInput = new BufferedInputStream(new FileInputStream(filename));
-        } catch (FileNotFoundException e) {
             throw new MyRuntimeException(e);
         }
 
@@ -108,69 +109,36 @@ public class HttpsCertAuth {
         return tmf;
     }
 
-    public TrustManagerFactory initTrustManager(){
+    public KeyStore initKeyStore(Context context, String fileName){
 
-        tmf = getTrustManagerFactory();
-        String filename = "tmp"; //TODO change this
-        Certificate  ca = loadCAFromInputStream(filename);
-        KeyStore     keyStore = createKeystore(ca);
-
+        InputStream caInput = null;
         try {
-            tmf.init(keyStore);
-        } catch (KeyStoreException e) {
-            throw new MyRuntimeException(e);
-        }
-
-        return tmf;
-
-    }
-
-    public HttpsURLConnection getHttpsURLConnection(URL url){
-
-
-        // Create an SSLContext that uses our TrustManager
-        SSLContext context = null;
-        try {
-            context = SSLContext.getInstance("TLS");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-        TrustManagerFactory tmf = getTrustManagerFactory();
-
-        try {
-            context.init(null, tmf.getTrustManagers(), null);
-        } catch (KeyManagementException e) {
-            throw new MyRuntimeException(e);
-        }
-
-        // Tell the URLConnection to use a SocketFactory from our SSLContext
-        // URL url = new URL("https://certs.cac.washington.edu/CAtest/");
-
-        HttpsURLConnection urlConnection = null;
-        try {
-            urlConnection = (HttpsURLConnection)url.openConnection();
+            caInput = new BufferedInputStream(context.getAssets().open(fileName));
         } catch (IOException e) {
             throw new MyRuntimeException(e);
         }
+        Certificate  ca = loadCAFromInputStream(caInput);
+        keyStore = createKeystore(ca);
 
-        urlConnection.setSSLSocketFactory(context.getSocketFactory());
-
-        return urlConnection;
-
-        /*
-        InputStream in = null;
-        try {
-            in = urlConnection.getInputStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        copyInputStreamToOutputStream(in, System.out);
-        */
-
+        return keyStore;
     }
 
+    public DefaultHttpClient getHttpsClient(){
+        try {
+            SSLSocketFactory sf = new MySSLSocketFactory(keyStore);
+            sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 
+            HttpParams params = new BasicHttpParams();
+            HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+            HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+            SchemeRegistry registry = new SchemeRegistry();
+            registry.register(new Scheme("https",sf, 443));
 
+            ClientConnectionManager ccm = new ThreadSafeClientConnManager(params, registry);
+
+            return new DefaultHttpClient(ccm, params);
+        } catch (Exception e) {
+            return new DefaultHttpClient();
+        }
+    }
 }

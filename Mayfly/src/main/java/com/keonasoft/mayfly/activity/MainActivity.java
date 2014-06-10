@@ -39,7 +39,6 @@ public class MainActivity extends Activity {
 
         context = getApplicationContext();
 
-//        HttpsCertAuth.getInstance().initTrustManager();
         HttpHelper.getInstance().initialize(getApplicationContext()); //initialize singalton httphelper object
 
         // Check device for Play Services APK.

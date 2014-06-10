@@ -4,11 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.keonasoft.mayfly.MyException;
-
 import org.json.JSONObject;
-
-import java.sql.SQLClientInfoException;
 
 /**
  * Created by kushal on 4/12/14.

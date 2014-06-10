@@ -5,7 +5,6 @@ import android.content.Context;
 import com.loopj.android.http.PersistentCookieStore;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -16,8 +15,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.spec.ECField;
 import java.util.Map;
 
 /**
@@ -41,7 +38,8 @@ public class HttpHelper {
      */
     public void initialize(Context context) {
         this.mCookie = new PersistentCookieStore(context);
-        this.mHttpClient = new DefaultHttpClient();
+        HttpsCertAuth.getInstance().initKeyStore(context, "server.crt");
+        this.mHttpClient = HttpsCertAuth.getInstance().getHttpsClient();
         this.mHttpClient.setCookieStore(mCookie);
         this.initialized = true;
     }
