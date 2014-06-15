@@ -5,6 +5,9 @@
     <item android:id="@+id/action_invite"
         android:title="@string/action_invite"
         app:showAsAction="withText|ifRoom"/>
+    <item android:id="@+id/action_friend_all"
+        android:title="@string/action_friend_all"
+        app:showAsAction="withText|ifRoom"/>
     <item android:id="@+id/action_delete"
         android:title="@string/action_delete" />
 </menu>

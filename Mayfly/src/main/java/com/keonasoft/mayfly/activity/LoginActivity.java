@@ -367,7 +367,7 @@ public class LoginActivity extends Activity {
                 finish();
             } else {
                 try {
-                    mEmailView.setError(result.getString("error"));
+                    mEmailView.setError(result.getString("message"));
                     mEmailView.requestFocus();
                 } catch (JSONException e) {
                     e.printStackTrace();

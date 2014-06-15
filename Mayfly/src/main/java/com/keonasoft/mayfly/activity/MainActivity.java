@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
                 public void run() {
 
                     try {
-                        sleep(1000);
+                        sleep(500);
                     } catch (InterruptedException e) {
                         // do nothing
                     } finally {

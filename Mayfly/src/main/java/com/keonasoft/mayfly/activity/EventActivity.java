@@ -21,16 +21,34 @@ import com.keonasoft.mayfly.helper.HttpHelper;
 import com.keonasoft.mayfly.model.Event;
 import com.keonasoft.mayfly.model.User;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EventActivity extends Activity {
 
+    //information about event
     private int eventId;
     private Event mEvent;
+
+    //display views in the layout
+    private TextView name;
+    private TextView description;
+    private TextView startTime;
+    private TextView endTime;
+    private TextView location;
+    private LinearLayout minMaxLayout;
+    private ToggleButton eventAttendingToggleButton;
+    private ListView usersAttendingListView;
+
+    //Used for displaying attending users in listview
+    List<String> userNames;
+    List<Integer> userIds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +71,14 @@ public class EventActivity extends Activity {
             protected void onPostExecute(final Boolean success){
                 if(success){
                     setContentView(R.layout.activity_event);
-                    TextView name = (TextView) findViewById(R.id.eventNameTextView);
-                    TextView description = (TextView) findViewById(R.id.eventDescriptionTextView);
-                    TextView startTime = (TextView) findViewById(R.id.eventStartTimeTextView);
-                    TextView endTime = (TextView) findViewById(R.id.eventEndTimeTextView);
-                    TextView location = (TextView) findViewById(R.id.eventLocationTextView);
-                    LinearLayout minMaxLayout = (LinearLayout) findViewById(R.id.minMaxLayout);
-                    ToggleButton eventAttendingToggleButton = (ToggleButton) findViewById(R.id.eventAttendingToggleButton);
-                    ListView usersAttendingListView = (ListView) findViewById(R.id.usersAttendingListView);
+                    name = (TextView) findViewById(R.id.eventNameTextView);
+                    description = (TextView) findViewById(R.id.eventDescriptionTextView);
+                    startTime = (TextView) findViewById(R.id.eventStartTimeTextView);
+                    endTime = (TextView) findViewById(R.id.eventEndTimeTextView);
+                    location = (TextView) findViewById(R.id.eventLocationTextView);
+                    minMaxLayout = (LinearLayout) findViewById(R.id.minMaxLayout);
+                    eventAttendingToggleButton = (ToggleButton) findViewById(R.id.eventAttendingToggleButton);
+                    usersAttendingListView = (ListView) findViewById(R.id.usersAttendingListView);
 
                     name.setText(mEvent.getName());
                     description.setText(mEvent.getDescription());
@@ -87,29 +105,7 @@ public class EventActivity extends Activity {
                         eventAttendingToggleButton.setChecked(true);
 
                     //Populate list of attending users
-                    List<String> userNames = new ArrayList<String>();
-                    List<Integer> userIds = new ArrayList<Integer>();
-
-                    for (Integer key: mEvent.getUsersAttending().keySet()){
-                        userIds.add(key);
-                        userNames.add(mEvent.getUsersAttending().get(key));
-                    }
-                    final List<Integer> EVENT_IDS = userIds;
-
-                    ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(EventActivity.this,
-                            android.R.layout.simple_list_item_1, userNames);
-                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    usersAttendingListView.setAdapter(dataAdapter);
-
-//                    usersAttendingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                        @Override
-//                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                            int eventId = EVENT_IDS.get(position);
-//                            Intent intent = new Intent(EventActivity.this, EventActivity.class);
-//                            intent.putExtra("eventId", eventId);
-//                            startActivity(intent);
-//                        }
-//                    });
+                    displayAttendingUsers();
                 }
                 else {
                     if(mEvent == null)
@@ -120,6 +116,35 @@ public class EventActivity extends Activity {
                 }
             }
         }.execute(null, null, null);
+    }
+
+    /**
+     * Displays the users who are currently attending the event
+     */
+    public void displayAttendingUsers(){
+        userNames = new ArrayList<String>();
+        userIds = new ArrayList<Integer>();
+
+        for (Integer key: mEvent.getUsersAttending().keySet()){
+            userIds.add(key);
+            userNames.add(mEvent.getUsersAttending().get(key));
+        }
+        final List<Integer> EVENT_IDS = userIds;
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(EventActivity.this,
+                android.R.layout.simple_list_item_1, userNames);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        usersAttendingListView.setAdapter(dataAdapter);
+
+//                    usersAttendingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                        @Override
+//                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                            int eventId = EVENT_IDS.get(position);
+//                            Intent intent = new Intent(EventActivity.this, EventActivity.class);
+//                            intent.putExtra("eventId", eventId);
+//                            startActivity(intent);
+//                        }
+//                    });
     }
 
     /**
@@ -150,6 +175,15 @@ public class EventActivity extends Activity {
                 try {
                     if(result.getBoolean("success")){
                         try {
+                            Map<Integer, String> usersAttending = new HashMap<Integer, String>();
+                            JSONArray users = result.getJSONArray("users_attending");
+                            for(int i = 0; i < users.length(); i++){
+                                JSONObject user = users.getJSONObject(i);
+                                Integer id = user.getInt("id");
+                                String name = user.getString("name");
+                                usersAttending.put(id, name);
+                            }
+                            mEvent.setUsersAttending(usersAttending);
                             User.getInstance().cacheEvents(EventActivity.this);
                         } catch (MyException e) {
                             e.printStackTrace();
@@ -166,8 +200,7 @@ public class EventActivity extends Activity {
             @Override
             protected void onPostExecute(final Boolean success){
                 if(success){
-                    finish();
-                    startActivity(getIntent());
+                    displayAttendingUsers();
                 }
                 else {
                     eventAttendingToggleButton.setChecked(mEvent.getAttending());
@@ -234,6 +267,53 @@ public class EventActivity extends Activity {
     }
 
     /**
+     * Adds all user's who have accepted the event as a friend
+     */
+    public void friendAccepted(){
+        final String URI = getString(R.string.conn) + getString(R.string.friends_create_from_event);
+        new AsyncTask<Void, Void, Boolean>(){
+            String message = getString(R.string.error_network);
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                JSONObject result = new JSONObject();
+
+                try {
+                    result.put("event_id", mEvent.getId());
+                } catch (JSONException e) {
+                    return false;
+                }
+
+                try {
+                    result = HttpHelper.httpPost(URI, result);
+                } catch (Exception e) {
+                    return false;
+                }
+                try {
+                    if(result.getBoolean("success")){
+                        try {
+                            User.getInstance().cacheFriends(EventActivity.this);
+                            message = "Friends added successfully";
+                        } catch (MyException e) {
+                            e.printStackTrace();
+                        }
+                        return true;
+                    }
+                    else {
+                        message = result.getString("message");
+                        return false;
+                    }
+                } catch (JSONException e) {
+                    return false;
+                }
+            }
+            @Override
+            protected void onPostExecute(final Boolean success){
+                Toast.makeText(EventActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        }.execute(null, null, null);
+    }
+
+    /**
      * Checks to see if current user has permission to invite.
      * If user has permission, start the invite activity
      */
@@ -264,6 +344,10 @@ public class EventActivity extends Activity {
         int id = item.getItemId();
         if (id == R.id.action_invite) {
             inviteUsers();
+            return true;
+        }
+        if (id == R.id.action_friend_all) {
+            friendAccepted();
             return true;
         }
         if (id == R.id.action_delete){
