@@ -18,17 +18,19 @@
             android:layout_weight="0.8"
             android:id="@+id/friendSearchTextView"
             android:textSize="20dp" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:id="@+id/friendSearchButton"
-            android:text="S"
-            android:layout_weight="0.1" />
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:id="@+id/friendAddButton"
             android:text="A"
+            android:layout_weight="0.1" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:id="@+id/friendImportButton"
+            android:text="I"
             android:layout_weight="0.1" />
     </LinearLayout>
 

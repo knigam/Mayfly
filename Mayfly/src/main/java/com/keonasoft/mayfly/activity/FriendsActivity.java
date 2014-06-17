@@ -2,6 +2,7 @@ package com.keonasoft.mayfly.activity;
 
 
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -41,7 +42,7 @@ public class FriendsActivity extends ActionBarActivity {
 
     //Layout Views
     private TextView friendSearch;
-    private Button friendSearchBtn;
+    private Button friendImportBtn;
     private Button friendAddBtn;
 
     @Override
@@ -55,11 +56,13 @@ public class FriendsActivity extends ActionBarActivity {
         displayFriends();
 
         friendSearch = (TextView) findViewById(R.id.friendSearchTextView);
-        friendSearchBtn = (Button) findViewById(R.id.friendSearchButton);
-        friendSearchBtn.setOnClickListener(new View.OnClickListener() {
+        friendImportBtn = (Button) findViewById(R.id.friendImportButton);
+        friendImportBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                searchFriends();
+                //searchFriends();
+                Intent intent = new Intent(FriendsActivity.this, ImportFriendsActivity.class);
+                startActivity(intent);
             }
         });
         friendAddBtn = (Button) findViewById(R.id.friendAddButton);
@@ -69,6 +72,13 @@ public class FriendsActivity extends ActionBarActivity {
                 addFriend();
             }
         });
+
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        displayFriends();
     }
 
     @Override
@@ -225,15 +235,24 @@ public class FriendsActivity extends ActionBarActivity {
         new AsyncTask<Void, Void, Boolean>(){
             protected Boolean doInBackground(Void... params) {
                 try {
-                    friendMap = User.getInstance().getFriends(getApplicationContext());
+                    User.getInstance().cacheFriends(getApplicationContext());
+                    System.out.println("HERE!!");
                 } catch (MyException e) {
+                    e.printStackTrace();
                     return false;
                 }
-                return true;
+                try {
+                    friendMap = User.getInstance().getFriends(getApplicationContext());
+                    System.out.println("SECOND");
+                    return true;
+                } catch (MyException e) {
+                    e.printStackTrace();
+                    return true;
+                }
             }
 
             @Override
-            protected void onPostExecute(Boolean success) {
+            protected void onPostExecute(Boolean network) {
                 friendNames = new ArrayList<String>();
                 friendIds = new ArrayList<Integer>();
 
@@ -253,6 +272,8 @@ public class FriendsActivity extends ActionBarActivity {
                         //TODO change this to show friend info
                     }
                 });
+                if(!network)
+                    Toast.makeText(FriendsActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show();
             }
         }.execute(null, null, null);
     }

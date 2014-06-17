@@ -5,7 +5,6 @@
     <string name="app_name">Mayfly</string>
     <string name="action_settings">Settings</string>
     <string name="app_id">194878360718768</string>
-
     <string name="please_wait_progress">Please wait…</string>
 
     <!-- Actions -->
@@ -35,6 +34,7 @@
     <string name="friends_create">/friends/create.json</string>
     <string name="friends_destroy">/friends/destroy.json</string>
     <string name="friends_create_from_event">/friends/create_from_event.json</string>
+    <string name="friends_bulk_create">/friends/bulk_create.json</string>
     <string name="events_create">/events/create.json</string>
     <string name="events_show">/events.json</string>
     <string name="event_show">/event</string>
@@ -46,12 +46,12 @@
     <string name="friends_cache">mayfly_friends_cache</string>
     <string name="events_cache">mayfly_events_cache</string>
 
-
     <!-- Titles -->
     <string name="title_activity_invite">Invite Friends</string>
     <string name="title_activity_new_event">New Event</string>
     <string name="title_activity_event">Event Details</string>
     <string name="title_activity_friends">Friends</string>
+    <string name="title_activity_import_friends">Import Friends</string>
     <string name="title_section1">Notifications</string>
     <string name="title_section2">My Events</string>
     <string name="title_section3">Attending Events</string>

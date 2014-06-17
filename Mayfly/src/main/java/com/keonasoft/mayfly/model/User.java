@@ -154,7 +154,7 @@ public class User {
         }
 
         try {
-            friendsJson = new JSONArray(friends.toString());
+            friendsJson = new JSONArray(friends);
         } catch (JSONException e) {
             e.printStackTrace();
             cacheFriends(appContext);
