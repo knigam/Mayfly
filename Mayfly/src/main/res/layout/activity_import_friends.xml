@@ -22,6 +22,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Import Contacts"
+        android:background="#1e3f64"
+        android:textColor="#FFFFFF"
         android:id="@+id/importContactBtn"
         android:layout_gravity="bottom|right" />
 

@@ -236,14 +236,12 @@ public class FriendsActivity extends ActionBarActivity {
             protected Boolean doInBackground(Void... params) {
                 try {
                     User.getInstance().cacheFriends(getApplicationContext());
-                    System.out.println("HERE!!");
                 } catch (MyException e) {
                     e.printStackTrace();
                     return false;
                 }
                 try {
                     friendMap = User.getInstance().getFriends(getApplicationContext());
-                    System.out.println("SECOND");
                     return true;
                 } catch (MyException e) {
                     e.printStackTrace();

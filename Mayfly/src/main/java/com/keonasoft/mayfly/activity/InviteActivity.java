@@ -152,6 +152,12 @@ public class InviteActivity extends Activity {
         new AsyncTask<Void, Void, Boolean>(){
             protected Boolean doInBackground(Void... params) {
                 try {
+                    User.getInstance().cacheFriends(getApplicationContext());
+                } catch (MyException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+                try {
                     friendMap = User.getInstance().getFriends(context);
                 } catch (MyException e) {
                     return false;
@@ -160,7 +166,7 @@ public class InviteActivity extends Activity {
             }
 
             @Override
-            protected void onPostExecute(Boolean success) {
+            protected void onPostExecute(Boolean network) {
                 friendNames = new ArrayList<String>();
                 friendIds = new ArrayList<Integer>();
 
@@ -173,6 +179,8 @@ public class InviteActivity extends Activity {
                         android.R.layout.simple_list_item_multiple_choice, friendNames);
                 dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 FRIENDVIEW.setAdapter(dataAdapter);
+                if(!network)
+                    Toast.makeText(InviteActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show();
             }
         }.execute(null, null, null);
     }

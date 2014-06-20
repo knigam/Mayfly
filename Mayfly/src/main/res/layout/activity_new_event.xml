@@ -132,9 +132,11 @@
                 android:hint="Description" />
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Submit"
+                android:background="#1e3f64"
+                android:textColor="#FFFFFF"
                 android:id="@+id/newEventSubmitButton"
                 android:layout_gravity="center_horizontal" />
 

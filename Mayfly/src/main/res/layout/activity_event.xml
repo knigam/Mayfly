@@ -11,29 +11,38 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/openClosedIcon"
+            android:longClickable="false"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/eventNameTextView"
-            android:layout_weight="1" />
+            android:layout_gravity="center"
+            android:paddingRight="5dp"
+            android:layout_weight="0.8"
+            android:paddingLeft="5dp" />
 
         <ToggleButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/toggle_btn_bg"
+            android:background="@drawable/attending_toggle_btn_bg"
             android:id="@+id/eventAttendingToggleButton"
             android:onClick="toggleAttendingEvent"
-            android:textOff="Not Going"
-            android:textOn="Going"
+            android:maxLines="0"
             android:textColor="#ffffff" />
 
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center">
 
         <TextView

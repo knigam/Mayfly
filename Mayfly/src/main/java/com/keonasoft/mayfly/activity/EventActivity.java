@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -42,6 +43,7 @@ public class EventActivity extends Activity {
     private TextView startTime;
     private TextView endTime;
     private TextView location;
+    private ImageView openClosedIcon;
     private LinearLayout minMaxLayout;
     private ToggleButton eventAttendingToggleButton;
     private ListView usersAttendingListView;
@@ -76,6 +78,7 @@ public class EventActivity extends Activity {
                     startTime = (TextView) findViewById(R.id.eventStartTimeTextView);
                     endTime = (TextView) findViewById(R.id.eventEndTimeTextView);
                     location = (TextView) findViewById(R.id.eventLocationTextView);
+                    openClosedIcon = (ImageView) findViewById(R.id.openClosedIcon);
                     minMaxLayout = (LinearLayout) findViewById(R.id.minMaxLayout);
                     eventAttendingToggleButton = (ToggleButton) findViewById(R.id.eventAttendingToggleButton);
                     usersAttendingListView = (ListView) findViewById(R.id.usersAttendingListView);
@@ -99,6 +102,13 @@ public class EventActivity extends Activity {
                         max.setText("max: " + mEvent.getMax());
                         minMaxLayout.addView(max);
                     }
+
+                    //Show correct icon to show if event is open or closed
+                    if(mEvent.getOpen())
+                        openClosedIcon.setBackgroundResource(R.drawable.open_event);
+                    else
+                        openClosedIcon.setBackgroundResource(R.drawable.closed_event);
+
 
                     //Determine if the attending toggle should be checked or not
                     if(mEvent.getAttending())

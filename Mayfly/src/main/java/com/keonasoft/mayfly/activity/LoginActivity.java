@@ -309,6 +309,7 @@ public class LoginActivity extends Activity {
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
         JSONObject result;
+        String message = getString(R.string.error_network);
         @Override
         protected Boolean doInBackground(Void... params) {
             String uri = conn;
@@ -347,6 +348,7 @@ public class LoginActivity extends Activity {
                     return true;
                 }
                 else if (success.equals("false")){
+                    message = result.getString("message");
                     return false;
                 }
 
@@ -366,12 +368,8 @@ public class LoginActivity extends Activity {
                 startActivity(intent);
                 finish();
             } else {
-                try {
-                    mEmailView.setError(result.getString("message"));
-                    mEmailView.requestFocus();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                mEmailView.setError(message);
+                mEmailView.requestFocus();
             }
         }
 
