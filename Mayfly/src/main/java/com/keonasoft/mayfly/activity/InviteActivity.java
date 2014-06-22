@@ -151,18 +151,19 @@ public class InviteActivity extends Activity {
 
         new AsyncTask<Void, Void, Boolean>(){
             protected Boolean doInBackground(Void... params) {
+                boolean network = true;
                 try {
                     User.getInstance().cacheFriends(getApplicationContext());
                 } catch (MyException e) {
                     e.printStackTrace();
-                    return false;
+                    network = false;
                 }
                 try {
-                    friendMap = User.getInstance().getFriends(context);
+                    friendMap = User.getInstance().getFriends(getApplicationContext());
                 } catch (MyException e) {
-                    return false;
+                    e.printStackTrace();
                 }
-                return true;
+                return network;
             }
 
             @Override
