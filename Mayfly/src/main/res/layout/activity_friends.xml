@@ -21,17 +21,15 @@
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:id="@+id/friendAddButton"
-            android:text="A"
-            android:layout_weight="0.1" />
+            android:background="@drawable/add_friend_icon" />
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:id="@+id/friendImportButton"
-            android:text="I"
-            android:layout_weight="0.1" />
+            android:background="@drawable/import_contact_icon" />
     </LinearLayout>
 
     <ListView

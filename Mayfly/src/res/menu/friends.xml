@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/action_delete"
-        android:title="@string/action_delete" />
-    <!--<item android:id="@+id/renameFriend"-->
-          <!--android:title="@string/action_friend_rename" />-->
-</menu>

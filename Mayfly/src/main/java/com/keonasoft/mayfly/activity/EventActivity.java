@@ -166,6 +166,7 @@ public class EventActivity extends Activity {
         final String URI = getString(R.string.conn) + getString(R.string.invite_update);
 
         new AsyncTask<Void, Void, Boolean>(){
+            String message = getString(R.string.error_network);
             @Override
             protected Boolean doInBackground(Void... params) {
                 JSONObject result = new JSONObject();
@@ -201,6 +202,7 @@ public class EventActivity extends Activity {
                         return true;
                     }
                     else {
+                        message = result.getString("message");
                         return false;
                     }
                 } catch (JSONException e) {
@@ -214,7 +216,7 @@ public class EventActivity extends Activity {
                 }
                 else {
                     eventAttendingToggleButton.setChecked(mEvent.getAttending());
-                    Toast.makeText(EventActivity.this, "Can't update attending status", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EventActivity.this, message, Toast.LENGTH_SHORT).show();
                 }
             }
         }.execute(null, null, null);

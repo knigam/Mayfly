@@ -130,7 +130,6 @@ public class HttpHelper {
     public static JSONObject httpToJson(HttpResponse response) throws Exception{
         try {
             String json = EntityUtils.toString(response.getEntity());
-            System.out.println(json);
             JSONObject jsonObject = new JSONObject(json);
             if (jsonObject == null)
                 throw new Exception("Returned JSON is Null");

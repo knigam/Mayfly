@@ -68,28 +68,39 @@
                 android:singleLine="true"
                 android:hint="Location" />
 
-            <TimePicker
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleY="0.7"
-                android:scaleX="0.7"
-                android:id="@+id/newEventStartTimePicker"
-                android:layout_gravity="center" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center">
 
-            <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:layout_gravity="center"
-            android:text=" to " />
+                <TextView
+                    style="@style/Widget.AppCompat.Base.Spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Start Time"
+                    android:id="@+id/newEventStartTime"
+                    android:textSize="20dp"
+                    android:clickable="true" />
 
-            <TimePicker
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleY="0.7"
-                android:scaleX="0.7"
-                android:id="@+id/newEventEndTimePicker"
-                android:layout_gravity="center" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:layout_gravity="center"
+                    android:text=" to "
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" />
+
+                <TextView
+                    style="@style/Widget.AppCompat.Base.Spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="End Time"
+                    android:id="@+id/newEventEndTime"
+                    android:textSize="20dp"
+                    android:clickable="true" />
+            </LinearLayout>
 
             <LinearLayout
                 android:orientation="horizontal"

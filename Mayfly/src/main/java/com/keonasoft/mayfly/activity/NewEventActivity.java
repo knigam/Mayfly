@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -13,7 +15,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.ToggleButton;
 
@@ -26,6 +30,8 @@ import com.keonasoft.mayfly.model.User;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
+
 public class NewEventActivity extends Activity {
 
     //Values for creating a new event
@@ -35,11 +41,11 @@ public class NewEventActivity extends Activity {
     //UI References
     private EditText mNameView;
     private EditText mDescriptionView;
-    private TimePicker mStartTimeView;
-    private TimePicker mEndTimeView;
     private EditText mLocationView;
     private EditText mMinView;
     private EditText mMaxView;
+    private TextView mStartTimeView;
+    private TextView mEndTimeView;
     private Button submitBtn;
     private ToggleButton openBtn;
 
@@ -53,8 +59,8 @@ public class NewEventActivity extends Activity {
         mEvent = new Event();
         mNameView = (EditText) findViewById(R.id.newEventNameEditText);
         mDescriptionView = (EditText) findViewById(R.id.newEventDescriptionEditText);
-        mStartTimeView = (TimePicker) findViewById(R.id.newEventStartTimePicker);
-        mEndTimeView = (TimePicker) findViewById(R.id.newEventEndTimePicker);
+        mStartTimeView = (TextView) findViewById(R.id.newEventStartTime);
+        mEndTimeView = (TextView) findViewById(R.id.newEventEndTime);
         mLocationView = (EditText) findViewById(R.id.newEventLocationEditText);
         mMinView = (EditText) findViewById(R.id.newEventMinEditText);
         mMaxView = (EditText) findViewById(R.id.newEventMaxEditText);
@@ -64,6 +70,68 @@ public class NewEventActivity extends Activity {
         mCreateEventView = findViewById(R.id.create_event_scroll_view);
         mCreateEventStatusView = findViewById(R.id.create_event_status);
 
+        //OnClick for start time dialog
+        mStartTimeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar mcurrentTime = Calendar.getInstance();
+                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int minute = mcurrentTime.get(Calendar.MINUTE);
+
+                TimePickerDialog.OnTimeSetListener timePickerListener
+                        = new TimePickerDialog.OnTimeSetListener() {
+                    // when dialog box is closed, below method will be called.
+                    public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
+                        mEvent.setStartTime(selectedHour + ":" + selectedMinute);
+                        String meridiem = "am";
+                        String zero = "";
+                        if(selectedMinute < 10)
+                            zero = "0";
+                        if(selectedHour >= 12){
+                            meridiem = "pm";
+                            if(selectedHour != 12)
+                                selectedHour -= 12;
+                        }
+                        mStartTimeView.setText(selectedHour + ":" + zero + selectedMinute + meridiem);
+                    }
+                };
+                TimePickerDialog dialog = new TimePickerDialog(NewEventActivity.this, timePickerListener,
+                        hour, minute, false);
+                dialog.setTitle("Start Time");
+                dialog.show();
+            }
+        });
+        //OnClick for end time dialog
+        mEndTimeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar mcurrentTime = Calendar.getInstance();
+                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int minute = mcurrentTime.get(Calendar.MINUTE);
+
+                TimePickerDialog.OnTimeSetListener timePickerListener
+                        = new TimePickerDialog.OnTimeSetListener() {
+                    // when dialog box is closed, below method will be called.
+                    public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
+                        mEvent.setEndTime(selectedHour + ":" + selectedMinute);
+                        String meridiem = "am";
+                        String zero = "";
+                        if(selectedMinute < 10)
+                            zero = "0";
+                        if(selectedHour >= 12){
+                            meridiem = "pm";
+                            if(selectedHour != 12)
+                                selectedHour -= 12;
+                        }
+                        mEndTimeView.setText(selectedHour + ":" + zero + selectedMinute + meridiem);
+                    }
+                };
+                TimePickerDialog dialog = new TimePickerDialog(NewEventActivity.this, timePickerListener,
+                        hour, minute, false);
+                dialog.setTitle("End Time");
+                dialog.show();
+            }
+        });
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,8 +190,9 @@ public class NewEventActivity extends Activity {
         mEvent.setDescription(mDescriptionView.getText().toString());
         mEvent.setLocation(mLocationView.getText().toString());
         mEvent.setOpen(openBtn.isChecked());
-        mEvent.setStartTime(mStartTimeView.getCurrentHour() + ":" + mStartTimeView.getCurrentMinute());
-        mEvent.setEndTime(mEndTimeView.getCurrentHour() + ":" + mEndTimeView.getCurrentMinute());
+        //TODO validate time
+        //mEvent.setStartTime(mStartTimeView.getCurrentHour() + ":" + mStartTimeView.getCurrentMinute());
+        //mEvent.setEndTime(mEndTimeView.getCurrentHour() + ":" + mEndTimeView.getCurrentMinute());
 
         //Check to make sure description is less than 255 chars
         if (!TextUtils.isEmpty(mEvent.getDescription()) && mEvent.getDescription().length() > 255) {
