@@ -291,7 +291,6 @@ public class LoginActivity extends Activity {
             Map<String, String> map = new HashMap<String, String>();
             map.put("email", mEmail);
             map.put("password", mPassword);
-            map.put("name", mName);
 
             //Determines where to POST to and if confirmation is needed
             if(signIn){
@@ -299,6 +298,7 @@ public class LoginActivity extends Activity {
             }
             else{
                 map.put("password_confirmation", mPasswordConfirmation);
+                map.put("name", mName);
                 uri += getString(R.string.sign_up);
             }
 
