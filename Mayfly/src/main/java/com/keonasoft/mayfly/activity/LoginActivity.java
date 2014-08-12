@@ -315,14 +315,14 @@ public class LoginActivity extends Activity {
                 return false;
             }
             try {
-                String success = result.getString("success");
-                if(success.equals("true")){
+                boolean success = result.getBoolean("success");
+                if(success){
                     User.getInstance().setEmail(result.getString("email"), getApplicationContext());
                     User.getInstance().setId(result.getInt("id"), getApplicationContext());
                     getUserData();
                     return true;
                 }
-                else if (success.equals("false")){
+                else if (success){
                     message = result.getString("message");
                     return false;
                 }
