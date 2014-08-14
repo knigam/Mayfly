@@ -106,7 +106,9 @@ public class NewEventActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY) + 1;
+                if(hour == 24)
+                    hour = 0;
                 int minute = mcurrentTime.get(Calendar.MINUTE);
 
                 TimePickerDialog.OnTimeSetListener timePickerListener
@@ -123,6 +125,9 @@ public class NewEventActivity extends Activity {
                             if(selectedHour != 12)
                                 selectedHour -= 12;
                         }
+                        else if(selectedHour == 0)
+                            selectedHour = 12;
+                        
                         mEndTimeView.setText(selectedHour + ":" + zero + selectedMinute + meridiem);
                     }
                 };
@@ -172,11 +177,13 @@ public class NewEventActivity extends Activity {
 
         // Reset errors.
         mNameView.setError(null);
-        mDescriptionView.setError(null);;
-        mLocationView.setError(null);;
-        mMinView.setError(null);;
-        mMaxView.setError(null);;
-        submitBtn.setError(null);;
+        mDescriptionView.setError(null);
+        mLocationView.setError(null);
+        mStartTimeView.setError(null);
+        mEndTimeView.setError(null);
+        mMinView.setError(null);
+        mMaxView.setError(null);
+        submitBtn.setError(null);
 
         boolean cancel = false;
         View focusView = null;
@@ -190,9 +197,6 @@ public class NewEventActivity extends Activity {
         mEvent.setDescription(mDescriptionView.getText().toString());
         mEvent.setLocation(mLocationView.getText().toString());
         mEvent.setOpen(openBtn.isChecked());
-        //TODO validate time
-        //mEvent.setStartTime(mStartTimeView.getCurrentHour() + ":" + mStartTimeView.getCurrentMinute());
-        //mEvent.setEndTime(mEndTimeView.getCurrentHour() + ":" + mEndTimeView.getCurrentMinute());
 
         //Check to make sure description is less than 255 chars
         if (!TextUtils.isEmpty(mEvent.getDescription()) && mEvent.getDescription().length() > 255) {
@@ -239,6 +243,20 @@ public class NewEventActivity extends Activity {
                 cancel = true;
             }
 
+        }
+
+        // Validate end time was selected
+        if (TextUtils.indexOf(mEndTimeView.getText(), ':') == -1){
+            mEndTimeView.setError(getString(R.string.error_field_required));
+            focusView = mEndTimeView;
+            cancel = true;
+        }
+
+        // Validate start time was selected
+        if (TextUtils.indexOf(mStartTimeView.getText(), ':') == -1){
+            mStartTimeView.setError(getString(R.string.error_field_required));
+            focusView = mStartTimeView;
+            cancel = true;
         }
 
         // Check for required location
